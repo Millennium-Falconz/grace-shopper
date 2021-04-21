@@ -49,6 +49,7 @@ const seed = async () => {
     });
   } catch (err) {
     console.error('Error somewhere fetching all this data...', err);
+
   }
 };
 
