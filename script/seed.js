@@ -42,7 +42,7 @@ const seed = async () => {
       pokemon.types = types;
       pokemon.price = 100;
       pokemon.description = '';
-      pokemon.imageUrl = data.sprites.other['official-artwork'].front_default;
+      pokemon.imageURL = data.sprites.other['official-artwork'].front_default;
       console.log('pokemon', pokemon);
 
       addToDatabase(pokemon);

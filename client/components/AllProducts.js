@@ -19,7 +19,12 @@ export class AllProducts extends React.Component {
                         <div key= {pokemon.id}>
                             <img src={pokemon.imageURL} />
                             <h1>{pokemon.name}</h1>
-                            <h3>Type: {pokemon.type}</h3>
+                            <ul>
+                            <h3>Type: {pokemon.types.map((type) => {
+                                return (
+                                <li key={type}>{type}</li>
+                                )
+                            })}</h3> </ul>
                         </div>
                     )
                 })}
