@@ -31,7 +31,7 @@ const Product = db.define('product', {
   },
   imageURL: {
     type: Sequelize.TEXT,
-    defaultValue: 'https://tinyurl.com/fp2kd4ry',
+    // defaultValue: 'https://tinyurl.com/fp2kd4ry',
   },
   pokedexID: {
     type: Sequelize.INTEGER,
