@@ -75,6 +75,7 @@ User.authenticate = async function ({ username, password }) {
   const error = Error('Bad Credentials')
   error.status = 401
   throw error;
+  
   // if (!user || !(await user.correctPassword(password))) {
   //   const error = Error("Incorrect username/password");
   //   error.status = 401;
@@ -114,10 +115,7 @@ const hashPassword = async (user) => {
 };
 
 // ????? we'll revisit  this when building routes.
-<<<<<<< HEAD
 // comment from karen: no need to chnage this, this is correct for authentification
-=======
->>>>>>> 7764f5134d370cebe04c2604fc7606154593066c
 User.beforeCreate((user) => {
   hashPassword();
 });
