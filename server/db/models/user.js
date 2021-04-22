@@ -17,6 +17,7 @@ const User = db.define("user", {
   },
   password: {
     type: Sequelize.STRING,
+    defaultValue: "FAKEPASSWORD",
     allowNull: false,
     validate: {
       notEmpty: true,
@@ -27,10 +28,19 @@ const User = db.define("user", {
     unique: true,
     validate: {
       isEmail: true,
+    },
+  },
+  userType: {
+    type: Sequelize.ENUM("user", "admin", "guest"),
+    defaultValue: "guest",
+    allowNull: false,
+    validate: {
       notEmpty: true,
     },
   },
 });
+
+// before checkout, add address, billing, etc
 
 module.exports = User;
 
@@ -84,7 +94,10 @@ const hashPassword = async (user) => {
   }
 };
 
-User.beforeCreate(hashPassword);
+// ????? we'll revisit  this when building routes.
+User.beforeCreate((user) => {
+  hashPassword();
+});
 User.beforeUpdate(hashPassword);
 User.beforeBulkCreate((users) => {
   users.forEach(hashPassword);
