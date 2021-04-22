@@ -4,19 +4,15 @@ const db = require("../db");
 const User = require("./user");
 
 const Order = db.define("order", {
-  //userID needs to go there, but we think it's coming from associations
+  //userID needs to go there, but we think it's coming from associations - it is.
   value: {
     type: Sequelize.INTEGER,
     isNull: false,
   },
   status: {
-    type: Sequelize.ENUM("processing", "shipped"),
-    defaultValue: "processing",
-  },
-  // could go with timestamp, testing this out
-  orderDate: {
-    type: Sequelize.DATE,
-    isNull: false,
+    // here - do we need abandoned as a status?
+    type: Sequelize.ENUM("in cart", "paid", "shipped", "refunded"),
+    defaultValue: "in cart",
   },
 });
 

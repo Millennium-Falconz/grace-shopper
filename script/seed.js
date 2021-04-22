@@ -1,10 +1,10 @@
-'use strict';
-const axios = require('axios');
+"use strict";
+const axios = require("axios");
 
 const {
   db,
   models: { User, Product },
-} = require('../server/db');
+} = require("../server/db");
 
 /**
  * seed - this function clears the database, updates tables to
@@ -18,12 +18,12 @@ const {
 
 const seed = async () => {
   await db.sync({ force: true });
-  console.log('db synced');
-  console.log('getting data...');
+  console.log("db synced");
+  console.log("getting data...");
   try {
     // Get a list of Pokemon and make a list of their names
     const { data } = await axios.get(
-      'https://pokeapi.co//api/v2/pokemon/?limit=100'
+      "https://pokeapi.co//api/v2/pokemon/?limit=100"
     );
     const allPokemon = data.results;
     const names = allPokemon.map((obj) => obj.name);
@@ -31,7 +31,7 @@ const seed = async () => {
     names.forEach(async (name) => {
       const url = `https://pokeapi.co/api/v2/pokemon/${name}/`;
       const { data } = await axios.get(url);
-      console.log('--------');
+      console.log("--------");
 
       const types = data.types.map((obj) => {
         // console.log(type);
@@ -41,24 +41,23 @@ const seed = async () => {
       pokemon.name = name;
       pokemon.types = types;
       pokemon.price = 100;
-      pokemon.description = '';
-      pokemon.imageURL = data.sprites.other['official-artwork'].front_default;
-      console.log('pokemon', pokemon);
+      pokemon.description = "";
+      pokemon.imageURL = data.sprites.other["official-artwork"].front_default;
+      console.log("pokemon", pokemon);
 
       addToDatabase(pokemon);
     });
   } catch (err) {
-    console.error('Error somewhere fetching all this data...', err);
-
+    console.error("Error somewhere fetching all this data...", err);
   }
 };
 
 const addToDatabase = async (pokemon) => {
-  console.log('adding...');
+  console.log("adding...");
   try {
     await Product.create(pokemon);
   } catch (err) {
-    console.error('Problem adding seed object to database', err);
+    console.error("Problem adding seed object to database", err);
   }
 
   // await Promise.all (
@@ -76,17 +75,17 @@ const addToDatabase = async (pokemon) => {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-  console.log('runSeed...');
+  console.log("runSeed...");
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log('closing db connection');
+    console.log("closing db connection");
     // Commenting this for now cuz it's preventing the data from seeding. Will fix later...
     // await db.close();
-    console.log('db connection closed');
+    console.log("db connection closed");
   }
 }
 
