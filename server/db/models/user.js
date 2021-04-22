@@ -53,32 +53,52 @@ User.prototype.correctPassword = function (candidatePwd) {
 };
 
 User.prototype.generateToken = function () {
-  return jwt.sign({ id: this.id }, process.env.JWT);
-};
+  try {
+  const token = jwt.sign({ id: this.id }, process.env.JWT);
+  return {token}
+} catch (err) {
+  console.error(err)
+} 
+}
+;
 
 /**
  * classMethods FOR AUTHENTICATION AND SECURITY
  */
 User.authenticate = async function ({ username, password }) {
-  const user = await this.findOne({ where: { username } });
-  if (!user || !(await user.correctPassword(password))) {
-    const error = Error("Incorrect username/password");
-    error.status = 401;
-    throw error;
+  const user = await User.findOne({ where: { username } });
+  const match = await bcrypt.compare(password, user.password);
+
+  if (match){
+    return user
   }
-  return user.generateToken();
+  const error = Error('Bad Credentials')
+  error.status = 401
+  throw error;
+  
+  // if (!user || !(await user.correctPassword(password))) {
+  //   const error = Error("Incorrect username/password");
+  //   error.status = 401;
+  //   throw error;
+  // }
+  // return user.generateToken();
 };
 
 User.findByToken = async function (token) {
   try {
-    const { id } = await jwt.verify(token, process.env.JWT);
-    const user = User.findByPk(id);
-    if (!user) {
-      throw "nooo";
+    // const { id } = await jwt.verify(token, process.env.JWT);
+    const payload = await jwt.verify(token, process.env.JWT)
+    if (payload) {
+      //find the user by payload which will have the userId
+      const user = User.findByPk(payload.id);
+      return user
     }
-    return user;
+    const error = Error("Bad Credentials!")
+    error.status = 401
+    throw error
+
   } catch (ex) {
-    const error = Error("bad token");
+    const error = Error("Bad Token!");
     error.status = 401;
     throw error;
   }
@@ -95,6 +115,7 @@ const hashPassword = async (user) => {
 };
 
 // ????? we'll revisit  this when building routes.
+// comment from karen: no need to chnage this, this is correct for authentification
 User.beforeCreate((user) => {
   hashPassword();
 });
