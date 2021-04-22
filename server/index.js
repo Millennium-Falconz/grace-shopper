@@ -5,7 +5,7 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
-app.listen(port);
+
 const app = require("./app");
 
 const init = async () => {
@@ -13,7 +13,9 @@ const init = async () => {
     await db.sync();
     console.log("db synced");
     // start listening (and create a 'server' object representing our server)
-    //app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`));
+    app.listen(port);
+    console.log(`Mixing it up on port ${port}`)
+    // app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`));
   } catch (ex) {
     console.log(ex);
   }
