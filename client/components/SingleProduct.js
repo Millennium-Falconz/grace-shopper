@@ -16,7 +16,7 @@ class SingleProduct extends React.Component {
   render() {
     const pokemon = this.props.singlePokemon;
     return (
-      <div>
+      <div className='singlePoke'>
         <h1>Name: {pokemon.name}</h1>
         <h3>Description: {pokemon.description}</h3>
         <h2>Price: {pokemon.price}</h2>

@@ -34,11 +34,27 @@ router.post('/signup', async (req, res, next) => {
   }
 })
 
-router.get('/me', async (req, res, next) => {
+router.get('/me',requireToken, async (req, res, next) => {
   try {
     res.send(await User.findByToken(req.headers.authorization))
   } catch (ex) {
     next(ex)
   }
 })
-//for when order component is created
+
+router.get('/', requireToken, async (req,res,next) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'username']
+    })
+    if(req.user){
+      res.send(users)
+    } else {
+      res.sendStatus(401)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+//make auth for orders when its created
