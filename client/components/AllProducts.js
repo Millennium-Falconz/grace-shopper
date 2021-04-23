@@ -13,24 +13,24 @@ export class AllProducts extends React.Component {
   }
 
   render() {
-    console.log("all", this.props);
     return (
-      <div>
-        <h1 className='pokemonlist'>All Pokemon</h1>
+      <div className='pokemonlist'>
+        <h1>All Pokemon</h1>
         {this.props.pokemon.map((pokemon) => {
           return (
-            <div key={pokemon.id}>
+            <div key={pokemon.id} className='pokemonContainer'>
               <img className='pokeimage' src={pokemon.imageURL} />
               <Link to={`/pokemon/${pokemon.id}`}>
-                <h1>{pokemon.name}</h1>
+                <h3>{pokemon.name}</h3>
               </Link>
-              <ul>
-                <h3>
-                  Type:{" "}
+              
+                  <h4>Type:</h4>
+                  <ul>
+                  <p>
                   {pokemon.types.map((type) => {
                     return <li key={type}>{type}</li>;
                   })}
-                </h3>{" "}
+                </p>
               </ul>
             </div>
           );
