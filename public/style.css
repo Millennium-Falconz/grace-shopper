@@ -23,3 +23,15 @@ form div {
 .pokeimage {
   block-size: 130px;
 }
+
+.pokemonlist {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+}

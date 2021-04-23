@@ -1,7 +1,17 @@
 const router = require('express').Router()
-const { models: {User }} = require('../db')
+const { models: {User, Order }} = require('../db')
 module.exports = router
 
+const requireToken = async(req,rees,next) => {
+  try {
+    const token = req.headers.authorization;
+    const user = await User.findByToken(token)
+    req.user = user
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
 router.post('/login', async (req, res, next) => {
   try {
     res.send({ token: await User.authenticate(req.body)}); 
@@ -31,3 +41,4 @@ router.get('/me', async (req, res, next) => {
     next(ex)
   }
 })
+//for when order component is created

@@ -22,6 +22,8 @@ class Routes extends Component {
         {isLoggedIn ? (
           <Switch>
             <Route path="/home" component={Home} />
+            <Route exact path="/pokemon" component={AllProducts} />
+            <Route path="/pokemon/:id" component={SingleProduct} />
             <Redirect to="/home" />
           </Switch>
         ) : (
@@ -29,10 +31,10 @@ class Routes extends Component {
             <Route path='/' exact component={ Login } />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route exact path="/pokemon" component={AllProducts} />
+            <Route path="/pokemon/:id" component={SingleProduct} />
           </Switch>
         )}
-        <Route exact path="/pokemon" component={AllProducts} />
-        <Route path="/pokemon/:id" component={SingleProduct} />
       </div>
     );
   }
