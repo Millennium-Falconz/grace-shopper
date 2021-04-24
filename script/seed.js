@@ -43,6 +43,7 @@ const seed = async () => {
       pokemon.price = 100;
       pokemon.description = "";
       pokemon.imageURL = data.sprites.other["official-artwork"].front_default;
+      pokemon.quantity = Product.quantity;
       console.log("pokemon", pokemon);
 
       addToDatabase(pokemon);
@@ -100,4 +101,3 @@ if (module === require.main) {
 
 // we export the seed function for testing purposes (see `./seed.spec.js`)
 module.exports = seed;
-

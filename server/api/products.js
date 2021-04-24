@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Product = require("../db/models/product");
-const User = require("../db/models/user")
+const User = require("../db/models/user");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -19,4 +19,5 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
+
 module.exports = router;

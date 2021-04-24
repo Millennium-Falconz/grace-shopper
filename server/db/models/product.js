@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const db = require('../db');
+const Sequelize = require("sequelize");
+const db = require("../db");
 
-const Product = db.define('product', {
+const Product = db.define("product", {
   name: {
     type: Sequelize.STRING,
     unique: true,
@@ -14,7 +14,6 @@ const Product = db.define('product', {
     type: Sequelize.TEXT,
   },
   price: {
-    // money/currency type? float?
     type: Sequelize.INTEGER,
     // isNull: false,
     // validate: {
@@ -35,10 +34,16 @@ const Product = db.define('product', {
   },
   pokedexID: {
     type: Sequelize.INTEGER,
+
     // isNull: false,
     // validate: {
-    //   notEmpty: true,
+    //   notEmpty: true,S
     // },
+  },
+  quantity: {
+    type: Sequelize.INTEGER,
+    // i'm setting default value to one because adding/removing should affect only one product at a time - UNSURE IF THIS IS THE WAY TO GO
+    defaultValue: 1,
   },
 });
 
