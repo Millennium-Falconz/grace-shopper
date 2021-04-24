@@ -38,66 +38,80 @@ const User = db.define("user", {
       notEmpty: true,
     },
   },
+  firstname: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  lastname: {
+    type: Sequelize.STRING,
+    allowNull: true,
+    validate: {
+      notEmpty: true,
+    },
+  },
 });
 
 // before checkout, add address, billing, etc
 
 module.exports = User;
 
-
-User.prototype.correctPassword = function(candidatePwd) {
+User.prototype.correctPassword = function (candidatePwd) {
   return bcrypt.compare(candidatePwd, this.password);
-}
+};
 
-User.prototype.generateToken = function() {
-  return jwt.sign({id: this.id}, process.env.JWT)
-}
+User.prototype.generateToken = function () {
+  return jwt.sign({ id: this.id }, process.env.JWT);
+};
 
 /**
  * classMethods
  */
-User.authenticate = async function({ username, password }){
-    const user = await this.findOne({where: { username }})
-    if (!user || !(await user.correctPassword(password))) {
-      const error = Error('Incorrect username/password');
-      error.status = 401;
-      throw error;
-    }
-    return user.generateToken();
+User.authenticate = async function ({ username, password }) {
+  const user = await this.findOne({ where: { username } });
+  if (!user || !(await user.correctPassword(password))) {
+    const error = Error("Incorrect username/password");
+    error.status = 401;
+    throw error;
+  }
+  return user.generateToken();
 };
 
-User.findByToken = async function(token) {
+User.findByToken = async function (token) {
   try {
     // const {id} = await jwt.verify(token, process.env.JWT)
-    const payload = await jwt.verify(token, process.env.JWT)
-    const user = User.findByPk(payload.id)
+    const payload = await jwt.verify(token, process.env.JWT);
+    const user = User.findByPk(payload.id);
     if (payload) {
       //find the user by payload which will have the userId
-      return user}
+      return user;
+    }
 
     if (!user) {
-      throw 'unauthorized'
+      throw "unauthorized";
     }
-    return user
+    return user;
   } catch (ex) {
-    const error = Error('Unathorized, bad token!')
-    error.status = 401
-    throw error
+    const error = Error("Unathorized, bad token!");
+    error.status = 401;
+    throw error;
   }
-}
+};
 
 /**
  * hooks
  */
-const hashPassword = async(user) => {
+const hashPassword = async (user) => {
   //in case the password has been changed, we want to encrypt it with bcrypt
-  if (user.changed('password')) {
+  if (user.changed("password")) {
     user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }
-}
+};
 
-User.beforeCreate(hashPassword)
-User.beforeUpdate(hashPassword)
-User.beforeBulkCreate(users => {
-  users.forEach(hashPassword)
-})
+User.beforeCreate(hashPassword);
+User.beforeUpdate(hashPassword);
+User.beforeBulkCreate((users) => {
+  users.forEach(hashPassword);
+});
