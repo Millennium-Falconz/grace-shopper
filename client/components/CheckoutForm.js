@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import '../../public/stripe_styles.css';
+import './stripe_styles.css';
 
 const CheckoutForm = () => {
   // react hooks, since this is a functional component
@@ -41,7 +41,7 @@ const CheckoutForm = () => {
   // render the form
   return (
     <Fragment>
-      <form onSubmit={handleSubmit}>
+      <form id="checkout-form" onSubmit={handleSubmit}>
         <label htmlFor="name"></label>
         <input type="text" id="name" placeholder="name" />
         <label htmlFor="email"></label>
