@@ -24,12 +24,23 @@ const calculateOrderAmount = (items) => {
 
 // our payment endpoint
 router.post('/create-payment-intent', async (req, res) => {
-  const { items } = req.body;
+  // const { items } = req.body;
+  const { amount, id } = req.body;
+  console.log('api/payment', req.body, amount, id);
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: calculateOrderAmount(items),
+    amount: amount,
     currency: 'usd',
+    payment_method: id,
+    confirm: true,
   });
-  res.send({ clientSecret: paymentIntent.clilent_secret });
+  // console.log('paymentIntent', paymentIntent);
+  // res.send({ clientSecret: paymentIntent.clilent_secret });
+  res.send(paymentIntent);
 });
 
+// not sure we need this. Or even how to trigger it...
+router.post('/webhook', (req, res) => {
+  const event = req.body;
+  console.log('STRIPE WEBHOOK', event);
+});
 module.exports = router;

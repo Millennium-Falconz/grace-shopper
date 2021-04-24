@@ -1,12 +1,15 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
+import axios from 'axios';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import './stripe_styles.css';
+import '../../public/stripe_styles.css';
 
 const CheckoutForm = () => {
   // react hooks, since this is a functional component
   const stripe = useStripe();
   const elements = useElements();
+  const [success, setSuccess] = useState(false);
 
+  // move the contents of this out to redux
   const handleSubmit = async (event) => {
     // prevent browser form submission
     event.preventDefault();
@@ -31,42 +34,58 @@ const CheckoutForm = () => {
       card: cardElement,
     });
 
-    if (error) {
-      console.error('ERROR', error);
-    } else {
+    if (!error) {
       console.log('PaymentMethod:', paymentMethod);
+      try {
+        const response = await axios.post(
+          '/api/payment/create-payment-intent',
+          {
+            amount: 1000,
+            id: paymentMethod.id,
+          }
+        );
+        console.log('STATUS', response.status);
+        setSuccess(true);
+      } catch (err) {
+        console.error('Error submitting payment', error);
+      }
+    } else {
+      console.error('ERROR creating payment method', error);
     }
   };
 
   // render the form
   return (
     <Fragment>
-      <form id="checkout-form" onSubmit={handleSubmit}>
-        <label htmlFor="name"></label>
-        <input type="text" id="name" placeholder="name" />
-        <label htmlFor="email"></label>
-        <input type="email" id="email" placeholder="email" />
-        <CardElement
-          options={{
-            style: {
-              base: {
-                width: '500px',
-                fontSize: '16px',
-                color: '#424770',
-                '::placeholder': {
-                  color: '#aab7c4',
+      {!success ? (
+        <form id="checkout-form" onSubmit={handleSubmit}>
+          <label htmlFor="name"></label>
+          <input type="text" id="name" placeholder="name" />
+          <label htmlFor="email"></label>
+          <input type="email" id="email" placeholder="email" />
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': {
+                    color: '#aab7c4',
+                  },
+                },
+                invalid: {
+                  color: '#9e2146',
                 },
               },
-              invalid: {
-                color: '#9e2146',
-              },
-            },
-          }}
-        />
-        <button type="submit" disabled={!stripe}>
-          Pay
-        </button>
-      </form>
+            }}
+          />
+          <button type="submit" disabled={!stripe}>
+            Pay
+          </button>
+        </form>
+      ) : (
+        <h2>Success! You have purchased a pokemon!</h2>
+      )}
     </Fragment>
   );
 };
