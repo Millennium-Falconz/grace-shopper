@@ -1,14 +1,20 @@
 import axios from "axios";
 
 //action types
+const RETRIEVE_CART = "RETRIEVE_CART";
 const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 const STORE_CART = "STORE_CART";
-const RETRIEVE_CART = "RETRIEVE_CART";
+
 const RESET_CART = "RESET_CART";
 const CHANGE_QUANTITY = "CHANGE_QUANTITY";
 
 // action creators
+
+const retrieveCart = (cart) => {
+  return { type: RETRIEVE_CART, cart };
+};
+
 const addToCart = (product) => {
   return { type: ADD_TO_CART, product };
 };
@@ -26,17 +32,19 @@ const storeCart = (cart) => {
   return { type: STORE_CART, cart };
 };
 
-//i;m not sure we need this one
-const retrieveCart = (cart) => {
-  return { type: RETRIEVE_CART, cart };
-};
-
 // this should be called at checkout
 const resetCart = (cart) => {
   return { type: RESET_CART, cart };
 };
 
 // thunk
+export const getCart = () => async (dispatch) => {
+  try {
+    const { data } = await axios.get("/api/cart");
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 // points to push route
 export function addItem() {
@@ -64,6 +72,8 @@ const initialState = [];
 
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
+    case RETRIEVE_CART:
+      return { ...state, cart: action.cart };
     case ADD_TO_CART:
       return [...state, action.product];
     case REMOVE_FROM_CART:
