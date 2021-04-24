@@ -1,7 +1,7 @@
-import React from "react";
-import { connect } from "react-redux";
-import { loadAllPokemon } from "../store/allproducts";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { connect } from 'react-redux';
+import { loadAllPokemon } from '../store/allproducts';
+import { Link } from 'react-router-dom';
 
 export class AllProducts extends React.Component {
   constructor(props) {
@@ -14,19 +14,19 @@ export class AllProducts extends React.Component {
 
   render() {
     return (
-      <div className='pokemonlist'>
+      <div className="pokemonlist">
         <h1>All Pokemon</h1>
         {this.props.pokemon.map((pokemon) => {
           return (
-            <div key={pokemon.id} className='pokemonContainer'>
-              <img className='pokeimage' src={pokemon.imageURL} />
+            <div key={pokemon.id} className="pokemonContainer">
+              <img className="pokeimage" src={pokemon.imageURL} />
               <Link to={`/pokemon/${pokemon.id}`}>
                 <h3>{pokemon.name}</h3>
               </Link>
-              
-                  <h4>Type:</h4>
-                  <ul>
-                  <p>
+
+              <h4>Type:</h4>
+              <ul>
+                <p>
                   {pokemon.types.map((type) => {
                     return <li key={type}>{type}</li>;
                   })}
