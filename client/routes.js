@@ -1,13 +1,15 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { withRouter, Route, Switch, Redirect } from "react-router-dom";
-import { Login } from "./components/AuthForm";
-import { Signup } from "./components/AuthFormSignUp";
-import Home from "./components/Home";
-import { me } from "./store";
-import AllProducts from "./components/AllProducts";
-import SingleProduct from "./components/SingleProduct";
-import Cart from "./components/Cart";
+import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { withRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Login } from './components/AuthForm';
+import { Signup } from './components/AuthFormSignUp';
+import Home from './components/Home';
+import { me } from './store';
+import AllProducts from './components/AllProducts';
+import SingleProduct from './components/SingleProduct';
+import Cart from './components/Cart';
+import StripeContainer from './components/StripeContainer';
+
 /**
  * COMPONENT
  */
@@ -27,6 +29,7 @@ class Routes extends Component {
             <Route exact path="/pokemon" component={AllProducts} />
             <Route path="/pokemon/:id" component={SingleProduct} />
             <Route path="/cart" component={Cart} />
+            <Route path="/checkout" component={StripeContainer} />
             <Redirect to="/home" />
           </Switch>
         ) : (
@@ -37,6 +40,7 @@ class Routes extends Component {
             <Route exact path="/pokemon" component={AllProducts} />
             <Route path="/pokemon/:id" component={SingleProduct} />
             <Route path="/cart" component={Cart} />
+            <Route path="/checkout" component={StripeContainer} />
           </Switch>
         )}
       </div>
