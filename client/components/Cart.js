@@ -1,7 +1,7 @@
-import React from "react";
-import { connect } from "react-redux"; // this is to connect to redux state
-import { Link } from "react-router-dom"; // this is to link to checkout
-import { removeItem, adjustQuantity } from "../store/cart";
+import React from 'react';
+import { connect } from 'react-redux'; // this is to connect to redux state
+import { Link } from 'react-router-dom'; // this is to link to checkout
+import { removeItem, adjustQuantity } from '../store/cart';
 class Cart extends React.Component {
   constructor() {
     super();
@@ -20,7 +20,9 @@ class Cart extends React.Component {
                 goal is to show list of items in cart. can divs be part of ul? */}
         </ul>
         {/* here - need to add react link to redirect to checkout */}
-        <button>Checkout</button>
+        <Link to={'/checkout'}>
+          <button>Checkout</button>
+        </Link>
       </div>
     );
   }
