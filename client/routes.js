@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import { me } from "./store";
 import AllProducts from "./components/AllProducts";
 import SingleProduct from "./components/SingleProduct";
+import Cart from "./components/Cart";
 /**
  * COMPONENT
  */
@@ -15,7 +16,7 @@ class Routes extends Component {
   }
 
   render() {
-    const {isLoggedIn} = this.props
+    const { isLoggedIn } = this.props;
 
     return (
       <div>
@@ -24,15 +25,17 @@ class Routes extends Component {
             <Route path="/home" component={Home} />
             <Route exact path="/pokemon" component={AllProducts} />
             <Route path="/pokemon/:id" component={SingleProduct} />
+            <Route path="/cart" component={Cart} />
             <Redirect to="/home" />
           </Switch>
         ) : (
           <Switch>
-            <Route path='/' exact component={ Login } />
+            <Route path="/" exact component={Login} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
             <Route exact path="/pokemon" component={AllProducts} />
             <Route path="/pokemon/:id" component={SingleProduct} />
+            <Route path="/cart" component={Cart} />
           </Switch>
         )}
       </div>
