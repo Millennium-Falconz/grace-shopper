@@ -12,9 +12,17 @@ const requireToken = async(req,res,next) => {
     next(error)
   }
 }
+const isAdmin = (req,res,next) => {
+  if (req.user.userType !== 'admin'){
+    return res.status(403).send('You shall not pass!')
+  } else {
+    next ()
+  }
+}
 
-router.get('/', requireToken, async (req,res,next) => {
+router.get('/', requireToken, isAdmin, async (req,res,next) => {
   try {
+    //this should only allow admins to see /api/users
     const users = await User.findAll({
 
       attributes: ['id', 'username']
