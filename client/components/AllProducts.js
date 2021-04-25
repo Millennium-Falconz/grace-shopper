@@ -15,24 +15,23 @@ export class AllProducts extends React.Component {
   render() {
     return (
       <div className="pokemonlist">
-        <h1>All Pokemon</h1>
         {this.props.pokemon.map((pokemon) => {
           return (
+            <Link to={`/pokemon/${pokemon.id}`}>
             <div key={pokemon.id} className="pokemonContainer">
               <img className="pokeimage" src={pokemon.imageURL} />
-              <Link to={`/pokemon/${pokemon.id}`}>
+              
                 <h3>{pokemon.name}</h3>
-              </Link>
-
-              <h4>Type:</h4>
-              <ul>
+              
+              <div className='here'>
                 <p>
                   {pokemon.types.map((type) => {
-                    return <li key={type}>{type}</li>;
+                    return <div key={type}>{type}</div>;
                   })}
                 </p>
-              </ul>
+              </div>
             </div>
+            </Link>
           );
         })}
       </div>

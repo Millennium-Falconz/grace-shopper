@@ -1,5 +1,11 @@
-body {
+body, html {
   font-family: sans-serif;
+  height: 100%;
+}
+
+body {
+  background-image: radial-gradient(rgb(61, 43, 177), rgb(0, 0, 6));
+  background-size: cover;
 }
 
 a {
@@ -12,24 +18,59 @@ label {
 
 nav a {
   display: inline-block;
-  margin: 1em;
+  border-bottom-left-radius: 15px ;
+  margin: 0.4em;
+  color: white;
 }
 
 form div {
   margin: 1em;
   display: inline-block;
 }
+h1 {
+  color: rgb(255, 255, 255);
+}
 
+.navbar h1 {
+  margin: 5px;
+}
 .pokemonContainer {
-  border: 1px solid black;
-  margin: 20px;
-  padding: 20px;
+  border: 1px solid white;
+  margin: 30px;
+  padding: 30px;
   border-radius: 20px;
+  color: aliceblue;
+  background-image: radial-gradient(rgba(84, 2, 249, 0.673), rgb(13, 1, 26));
+  text-align: center;
+}
+.pokemonContainer a {
+  color: aliceblue;
+}
+.pokemonContainer h3 {
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 3px;
+}
+.pokemonContainer ul {
+  list-style-type: none;
+}
+.pokemonContainer li {
+  text-align: center;
+  border: 1px solid white;
+  border-radius: 3px;
+  margin: 7px;
 }
 .pokeimage {
   block-size: 130px;
 }
-
+ .here p {
+   text-align: center;
+ }
+ .here div{
+   border: 1px solid white;
+   border-radius: 3px;
+   margin: 7px;
+ }
 .pokemonlist {
   display: flex;
   flex-direction: row;
@@ -43,7 +84,7 @@ h1 {
 }
 
 .sft {
-  color: #000;
+  color: white;
   text-transform: uppercase;
   font-size: 23px;
   margin: -50px 0 80px 0;
@@ -56,7 +97,7 @@ h1 {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: #6772e5;
-  border-radius: 30px;
-  padding: 70px 100px;
+  /* background-color: #6772e5; */
+  /* background-image: radial-gradient(rgba(92, 3, 169, 0.879), rgb(47, 0, 94)); */
+  padding: 0px 80px;
 }
