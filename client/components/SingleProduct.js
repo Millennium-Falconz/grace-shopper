@@ -17,14 +17,10 @@ class SingleProduct extends React.Component {
   }
   handleClick(event) {
     event.preventDefault();
-    // console.log("event.target.value: ", this.props);
-    // console.log("this is props: ", this.props);
+    console.log("event.target.value: ", this.props);
 
-    // console.log("this is props.singlePokemon", this.props.singlePokemon);
-    // if(this.props.cart) {
-
-    // }
-    this.props.addToCart(event.target.value);
+    //HERE - before calling thunk for adding/adjusting, call getCart. if there is an order w/in cart status, put. if not post.
+    this.props.addToCart(event.target.value, this.props.cart);
   }
   //first - check (isLoggedIn) OR (username)
   //if true => call thunk
@@ -32,6 +28,8 @@ class SingleProduct extends React.Component {
 
   render() {
     const pokemon = this.props.singlePokemon;
+    // const { handleClick } = this;
+    console.log("props: ", this.props);
 
     return (
       <div className="singlePoke">
@@ -40,7 +38,7 @@ class SingleProduct extends React.Component {
         <h2>Price: {pokemon.price}</h2>
         <img src={pokemon.imageURL} />
         <h3>Type: {pokemon.types}</h3>
-        <button value={pokemon} onClick={this.handleClick}>
+        <button value={pokemon.id} onClick={this.handleClick}>
           Add To Cart
         </button>
       </div>
@@ -51,6 +49,7 @@ class SingleProduct extends React.Component {
 const mapStateToProps = (state) => {
   return {
     singlePokemon: state.singlePokemon,
+    cart: state.cart,
   };
 };
 
@@ -58,7 +57,8 @@ const mapDispatchToProps = (dispatch) => {
   console.log("in mapDispatch");
   return {
     loadProduct: (id) => dispatch(fetchSingleProduct(id)),
-    addToCart: (pokemon) => dispatch(addItem(pokemon)),
+
+    addToCart: (id, cart) => dispatch(addItem(id, cart)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct);

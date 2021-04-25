@@ -38,6 +38,7 @@ const resetCart = (cart) => {
 };
 
 // thunk
+// NOT FINISHED - MISSING DISPATCH CALL
 export const getCart = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/cart");
@@ -46,16 +47,18 @@ export const getCart = () => async (dispatch) => {
   }
 };
 
-export function addItem(pokemonId) {
+export function addItem(id, cart) {
   return async (dispatch) => {
+    console.log("in the thunk ", id, cart);
     try {
-      if (pokemonId) {
-        //put route
-        const { data } = await axios.put("/api/cart", pokemonId);
+      //if the cart is not empty
+      if (cart.includes(id)) {
+        //put route - if the cart isn't empty, edit existing order
+        const { data } = await axios.put("/api/cart", id);
         dispatch(changeQuantity(data));
       } else {
-        //post route
-        const { data } = await axios.post("/api/cart", pokemonId);
+        //post route - if the cart is empty create new order and add item
+        const { data } = await axios.post("/api/cart", id);
         dispatch(addToCart(data));
       }
     } catch (error) {
@@ -88,6 +91,7 @@ export default function cartReducer(state = initialState, action) {
         product.id !== action.product.id;
       });
     case CHANGE_QUANTITY:
+      //QUESTIONABLE
       return state.filter((product) => {
         product.id === action.product.id;
       }).quantity++;
