@@ -15,34 +15,31 @@ export const resetCart = () => {
 // thunks
 
 export const submitPayment = (orderId, paymentId) => {
-  return (dispatch) = async () => {
+  return async (dispatch) => {
     try {
-      const response = await axios.post(
-        '/api/payment/create-payment-intent',
-        {
-          orderId: orderId,
-          paymentId: paymentId
-        }
-      );
+      const response = await axios.post('/api/payment/create-payment-intent', {
+        orderId: orderId,
+        paymentId: paymentId,
+      });
       console.log('STATUS', response.status);
       // setSuccess(true); component remnant, do we need to restore somrthing there?
       // can we get the orderId from response or do we need to pass it from the component?
-      dispatch(setOrderStatusPaid(orderId))
+      dispatch(setOrderStatusPaid(orderId));
     } catch (err) {
-      console.error('Error submitting payment', error);
+      console.error('Error submitting payment', err);
     }
-  }
-}
+  };
+};
 
 export const setOrderStatusPaid = (orderId) => {
-  return (dispatch) = async () => {
+  return async (dispatch) => {
     try {
       const response = await axios.put('./order_status', { status: 'paid' });
       console.log(`Order ${orderId} status updated to 'paid'`);
     } catch (error) {
       console.error('Could not update order status', error);
     }
-  });
+  };
 };
 
 // // needed route for orders.js

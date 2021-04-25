@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import axios from 'axios';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { connect } from 'react-redux';
+import { submitPayment } from '../store/checkout';
 
 import '../../public/stripe_styles.css';
 
@@ -37,8 +38,10 @@ const CheckoutForm = (props) => {
       console.log('PaymentMethod:', paymentMethod);
       // need to get the orderId and the items being purchased
       // so guessing our state should be an array of OrderItems? Objects?
-      if (cart) {
+      let orderId = null;
+      if (!props.cart) {
         // don't have cart state yet
+        console.log('No cart yet!');
       } else {
         // create some dummy data as fallback for testing
         orderId = 24;
@@ -49,7 +52,8 @@ const CheckoutForm = (props) => {
         //   { productId: 18, price: 8000, qty: 1 },
         // ];
       }
-      dispatch(submitPayment(orderId, paymentMethod.id));
+      props.sendPayment(orderId, paymentMethod.id);
+      // dispatch(submitPayment(orderId, paymentMethod.id));
     } else {
       console.error('ERROR creating payment method', error);
     }
@@ -61,9 +65,9 @@ const CheckoutForm = (props) => {
       {!success ? (
         <form id="checkout-form" onSubmit={handleSubmit}>
           <label htmlFor="name"></label>
-          <input type="text" id="name" placeholder="name" />
+          {/* <input type="text" id="name" placeholder="name" /> */}
           <label htmlFor="email"></label>
-          <input type="email" id="email" placeholder="email" />
+          {/* <input type="email" id="email" placeholder="email" /> */}
           <CardElement
             options={{
               style: {
@@ -99,7 +103,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    submitPayment: dispatch(submitPayment(orderId, paymentId)),
+    sendPayment: (orderId, paymentId) =>
+      dispatch(submitPayment(orderId, paymentId)),
   };
 };
 
