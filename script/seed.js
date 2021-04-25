@@ -44,7 +44,6 @@ const seed = async () => {
       pokemon.description = "";
       pokemon.imageURL = data.sprites.other["official-artwork"].front_default;
       pokemon.quantity = Product.quantity;
-      console.log("pokemon", pokemon);
 
       addToDatabase(pokemon);
     });

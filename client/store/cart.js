@@ -23,7 +23,7 @@ const removeFromCart = (product) => {
   return { type: REMOVE_FROM_CART, product };
 };
 
-const increaseQuantity = (qty) => {
+const changeQuantity = (qty) => {
   return { type: CHANGE_QUANTITY, qty };
 };
 
@@ -46,15 +46,22 @@ export const getCart = () => async (dispatch) => {
   }
 };
 
-// points to push route
-export function addItem() {
-  return async((dispatch) => {
+export function addItem(pokemonId) {
+  return async (dispatch) => {
     try {
-      // const {data} = await axios()
+      if (pokemonId) {
+        //put route
+        const { data } = await axios.put("/api/cart", pokemonId);
+        dispatch(changeQuantity(data));
+      } else {
+        //post route
+        const { data } = await axios.post("/api/cart", pokemonId);
+        dispatch(addToCart(data));
+      }
     } catch (error) {
       console.log(error);
     }
-  });
+  };
 }
 
 //delete route
