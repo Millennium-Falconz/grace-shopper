@@ -30,7 +30,8 @@ const Product = db.define("product", {
   },
   imageURL: {
     type: Sequelize.TEXT,
-    // defaultValue: 'https://tinyurl.com/fp2kd4ry',
+    defaultValue:
+      "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.deviantart.com%2Famitlu89%2Fart%2FWho-s-that-Pokemon-254910939&psig=AOvVaw2PDU6zy9zOHBj65LleP_3L&ust=1619469091977000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDQ1NWemvACFQAAAAAdAAAAABAD",
   },
   pokedexID: {
     type: Sequelize.INTEGER,
