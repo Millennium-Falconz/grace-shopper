@@ -42,14 +42,13 @@ h1 {
   color: aliceblue;
   background-image: radial-gradient(rgba(84, 2, 249, 0.673), rgb(13, 1, 26));
   text-align: center;
+  height: 250px;
 }
 .pokemonContainer a {
   color: aliceblue;
 }
 .pokemonContainer h3 {
   text-align: center;
-  border: 1px solid white;
-  border-radius: 3px;
 }
 .pokemonContainer ul {
   list-style-type: none;
@@ -65,6 +64,7 @@ h1 {
 }
  .here p {
    text-align: center;
+   padding:3px;
  }
  .here div{
    border: 1px solid white;
@@ -100,4 +100,9 @@ h1 {
   /* background-color: #6772e5; */
   /* background-image: radial-gradient(rgba(92, 3, 169, 0.879), rgb(47, 0, 94)); */
   padding: 0px 80px;
+}
+
+#type{
+color:white;
+font-size: 17px;
 }
