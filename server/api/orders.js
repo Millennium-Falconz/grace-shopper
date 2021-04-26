@@ -1,22 +1,23 @@
 const router = require("express").Router();
-const { models: { Order, Product, OrderItems} } = require("../db");
+const { models: { Order, Product, OrderItems, User} } = require("../db");
 // const Product = require("../db");
 // const OrderItems = require("../db");
 const { requireToken } = require("./gatekeeper");
 
-router.get("/", async (req, res, next) => {
+router.get("/", requireToken, async (req, res, next) => {
   try {
-    const cart = await Order.findOne({
+    
+    const cart = await Order.findAll({
+      where: {
+        status: "in cart",
+        userId: req.user.id
+      },
       include: [
         {
           model: Product,
-          through: "orderItems",
-        },
-      ],
-      where: {
-        status: "in cart",
-        userId: req.user.id,
-      },
+          through: 'orderItems'
+        }
+      ]
     });
     if (!cart) {
       let err = new Error("Your cart is currently empty! Start shopping!");
@@ -31,20 +32,25 @@ router.get("/", async (req, res, next) => {
 //when you have to add an item to cart
 router.post("/", requireToken, async (req, res, next) => {
   try {
-    const addingItemToCart = req.body.id;
-    console.log("body", req.body);
-    console.log("headers", req.headers);
-    // console.log("req", req);
-    console.log("req.params: ", req.params);
-    const newOrder = await Order.create({
+    const addingItemToCart = req.body;
+    const newOrder = await Order.findOrCreate({
+      where: {
       status: "in cart",
-      userId: 1,
-    });
+      userId: req.user.id,
+    }
     
+  });
+  let currItem = await OrderItems.findOne({
+    where : {
+      productId: addingItemToCart.id
+    }
+  })
+    console.log("HIII", req.body)
     // const productInfo = await Product.findByPk(req.body.id)
 
     await newOrder.addProduct(addingItemToCart, 
-      {through: {quantity: 1}});
+      {through: {quantity: 1, price: req.body.price}});
+
     const order = await Order.findByPk(newOrder.id,
         {include: [{model: OrderItems}]}
       )

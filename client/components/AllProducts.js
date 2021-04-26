@@ -25,7 +25,7 @@ export class AllProducts extends React.Component {
                 <h3>{pokemon.name}</h3>
               
               <div className='here'>
-                <p>
+                <div>
                   {pokemon.types.map((type) => {
                     if(type === 'grass'){
                       color = 'rgb(119, 199, 81)'
@@ -74,7 +74,7 @@ export class AllProducts extends React.Component {
                     }
                     return <div key={type} id="type" style ={{background: color}}>{type}</div>;
                   })}
-                </p>
+                </div>
               </div>
             </div>
             </Link>

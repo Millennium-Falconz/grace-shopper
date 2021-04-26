@@ -9,7 +9,7 @@ import AllProducts from './components/AllProducts';
 import SingleProduct from './components/SingleProduct';
 import Cart from './components/Cart';
 import StripeContainer from './components/StripeContainer';
-
+import {getCart} from './store/cart'
 /**
  * COMPONENT
  */
@@ -56,6 +56,7 @@ const mapState = (state) => {
     // Being 'logged in' for our purposes will be defined has having a state.auth that has a truthy id.
     // Otherwise, state.auth will be an empty object, and state.auth.id will be falsey
     isLoggedIn: !!state.auth.id,
+    auth: state.auth
   };
 };
 

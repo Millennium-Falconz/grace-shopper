@@ -29,8 +29,7 @@ class SingleProduct extends React.Component {
     const pokemon = this.props.singlePokemon;
 
     // const { handleClick } = this;
-    console.log("props.singlePokemon: ", this.props.singlePokemon);
-    console.log("props: ", this.props);
+    console.log('state', this.props)
 
     return (
       <div className="singlePoke">
