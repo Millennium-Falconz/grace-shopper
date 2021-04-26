@@ -1,4 +1,5 @@
 import axios from "axios";
+import getAuthHeaderWithToken from "./helpers";
 
 //action types
 const RETRIEVE_CART = "RETRIEVE_CART";
@@ -23,7 +24,7 @@ const removeFromCart = (product) => {
   return { type: REMOVE_FROM_CART, product };
 };
 
-const increaseQuantity = (qty) => {
+const changeQuantity = (qty) => {
   return { type: CHANGE_QUANTITY, qty };
 };
 
@@ -38,23 +39,38 @@ const resetCart = (cart) => {
 };
 
 // thunk
+// NOT FINISHED - MISSING DISPATCH CALL
 export const getCart = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/cart");
+    dispatch(retrieveCart(data));
   } catch (err) {
     console.log(err);
   }
 };
 
-// points to push route
-export function addItem() {
-  return async((dispatch) => {
+export function addItem(pokemon, cart) {
+  return async (dispatch) => {
+    console.log("in the thunk ", pokemon, cart);
+    // console.log("what are you: ", Object.values(pokemon));
     try {
-      // const {data} = await axios()
+      //if the cart is not empty
+      // if (cart.includes(pokemon.id)) {
+      //   //put route - if the cart isn't empty, edit existing order
+      //   const { data } = await axios.put("/api/cart", pokemon);
+      //   dispatch(changeQuantity(data));
+      // } else
+      //post route - if the cart is empty create new order and add item
+      // console.log("pokemon", pokemon);
+      const headers = getAuthHeaderWithToken();
+      console.log(headers);
+      const { data } = await axios.post("/api/cart", pokemon, headers);
+      console.log('DATA >>>>>',data)
+      dispatch(addToCart(data));
     } catch (error) {
       console.log(error);
     }
-  });
+  };
 }
 
 //delete route
@@ -73,14 +89,15 @@ const initialState = [];
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case RETRIEVE_CART:
-      return { ...state, cart: action.cart };
+      return [...state];
     case ADD_TO_CART:
-      return [...state, action.product];
+      return [...state, action.product.id];
     case REMOVE_FROM_CART:
       return state.filter((product) => {
         product.id !== action.product.id;
       });
     case CHANGE_QUANTITY:
+      //QUESTIONABLE
       return state.filter((product) => {
         product.id === action.product.id;
       }).quantity++;

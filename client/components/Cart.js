@@ -1,26 +1,30 @@
-import React from 'react';
-import { connect } from 'react-redux'; // this is to connect to redux state
-import { Link } from 'react-router-dom'; // this is to link to checkout
-import { removeItem, adjustQuantity } from '../store/cart';
+import React from "react";
+import { connect } from "react-redux"; // this is to connect to redux state
+import { Link } from "react-router-dom"; // this is to link to checkout
+import { removeItem, adjustQuantity } from "../store/cart";
 class Cart extends React.Component {
   constructor() {
     super();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.cart;
+  }
   // make sure to
 
   render() {
+    console.log("props: ", this.props);
     return (
       <div>
         <h1>hello i shall be the cart</h1>
-        <ul>
+        <p>
+          {this.props.cart[0]}
           {/* here -  this.props.map over items in state.cart. make it a div 
                 so that there can be qty and remove (both need event handlers)
                 goal is to show list of items in cart. can divs be part of ul? */}
-        </ul>
+        </p>
         {/* here - need to add react link to redirect to checkout */}
-        <Link to={'/checkout'}>
+        <Link to={"/checkout"}>
           <button>Checkout</button>
         </Link>
       </div>
