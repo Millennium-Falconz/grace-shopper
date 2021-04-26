@@ -2,58 +2,46 @@ const router = require('express').Router();
 if (process.env.NODE_ENV !== 'production') require('../secrets.js');
 const stripeKey = process.env.STRIPE_API_KEY;
 const stripe = require('stripe')(stripeKey);
-
-// const {
-//   models: { Order },
-// } = require('../db/');
-// const {
-//   models: { OrderItems },
-// } = require('../db/');
-// const {
-//   models: { User },
-// } = require('../db/');
-// const {
-//   models: { Product },
-// } = require('../db/');
 const {
   models: { Product, User, Order, OrderItems },
 } = require('../db');
 
-// justs to test the routes and that we're getting the env vars
-router.get('/public_keys', (req, res) => {
-  res.json('Nothing to see here... Or is there?');
-});
-
-const calculateOrderAmount = (items) => {
+router.get('/order_total', async (req, res, next) => {
   /*
   Note: stripe recommends calculating the order amount here
   on the server to prevent people from manipulating the
   amount on the client
-
+  
   Note 2: Amounts are in cents, due to the javascript float
   approximating issue
   */
 
   // to calculate this, need access to the OrderItems(?) in the cart
-  // dummy value for now.
-  return 1400;
-};
-
-// our payment endpoint
-router.post('/create-payment-intent', async (req, res) => {
-  console.log('api/create-payment-intent/post');
-  // const { items } = req.body;
-  const { orderItems, orderId, paymentId } = req.body;
-  // get orderItems from orderId
-  // going to fake some for now
+  // if cart is an array of order items
+  // shoot we need to look up the prices right now since they're not in the orderItems table
+  const { cart } = req.body;
+  let amounts = [];
   try {
-    // const frodo = await User.findOrCreate({
-    //   username: 'Frodo',
-    //   password: 'frodo',
-    //   type: 'user',
-    //   email: 'f@b.com',
-    // });
+    amounts = await Promise.all(
+      cart.map(async (orderItem) => {
+        const product = await Product.findByPk(orderItem.productId);
+        return product.price * orderItem.quantity;
+      })
+    );
 
+    const total = amounts.reduce((sum, amt) => {
+      return sum + amt;
+    }, 0);
+    res.json(total);
+  } catch (err) {
+    const error = new Error('Could not calculate order amount.', err);
+    next(error);
+  }
+});
+
+const tempCreateFakeCartData = async () => {
+  try {
+    const { orderItems, orderId, paymentId } = req.body;
     const result = await Order.findOrCreate({
       where: {
         status: 'in cart',
@@ -61,43 +49,25 @@ router.post('/create-payment-intent', async (req, res) => {
       },
       include: [{ model: OrderItems }],
     });
+
+    // remember findOrCreate returns an array!
     const newOrder = result[0];
-    // await frodo.addOrder(newOrder);
-    // const item1 = await OrderItems.create({
-    //   orderId: 1,
-    //   productId: 23,
-    //   price: 2000,
-    //   quantity: 2,
-    // });
-    // const item2 = await OrderItems.create({
-    //   orderId: 2,
-    //   productId: 18,
-    //   price: 1250,
-    //   quantity: 1,
-    // });
-    // await newOrder.addOrderItem(item2);
-    const r = Math.random() * 100;
-    const testProduct = await Product.create({
-      name: 'TestItem' + r,
-      price: 1250,
-      types: ['grass', 'monkey'],
-    });
-    await newOrder.addProduct(13, { through: {} });
-    console.log('id', newOrder.userId, newOrder.status);
-    console.log('order', newOrder);
-    console.log('items', newOrder.orderItems);
 
-    // console.log('userId, newOrder:', newOrder.userId, newOrder);
-    // 4242 4242 4242 4242
-    // console.log('O', Object.values(Order.__proto__));
-    // console.log('OI', Object.keys(OrderItem.__proto__));
-    // console.log('assoc', Object.__proto__.getAssociations());
-    // console.log(OrderItem.__proto__);
+    const randomId = Math.round(Math.random() * 100);
+    const randomQuant = Math.round(Math.random() * 10);
+    await newOrder.addProduct(randomId, { through: { quantity: randomQuant } });
+  } catch (error) {
+    console.error('Error with our fake order data:', error);
+  }
+};
 
-    // const amount = calculateOrderAmount(newOrder.orderItems);
-    // have to query for order items associated with that id.
+// our payment endpoint
+router.post('/create-payment-intent', async (req, res) => {
+  console.log('api/create-payment-intent/post', req.body);
 
-    console.log('api/payment', req.body, paymentId);
+  try {
+    const newOrder = await tempCreateFakeCartData();
+    const amount = await calculateOrderAmount(newOrder.orderItems);
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 10000,
       currency: 'usd',
@@ -106,14 +76,8 @@ router.post('/create-payment-intent', async (req, res) => {
     });
     res.send(paymentIntent);
   } catch (error) {
-    console.error('Error with our fake payment data:', error);
-    // console.log('paymentIntent', paymentIntent);
+    console.error('Error with stripe payment intent', error);
   }
 });
 
-// not sure we need this. Or even how to trigger it...
-router.post('/webhook', (req, res) => {
-  const event = req.body;
-  console.log('STRIPE WEBHOOK', event);
-});
 module.exports = router;

@@ -1,20 +1,43 @@
 import axios from 'axios';
 import cart from './cart';
 
-const ORDER_STATUS_PAID = 'ORDER_STATUS_PAID';
-const RESET_CART = 'RESET_CART';
+const GET_ORDER_TOTAL_SUCCESS = 'GET_ORDER_TOTAL_SUCCESS';
+const GET_ORDER_TOTAL_FAIL = 'GET_ORDER_TOTAL_FAIL';
+const PAYMENT_SUCCESS = 'PAYMENT_SUCCESS';
+const PAYMENT_FAIL = 'PAYMENT_FAIL';
 
-export const orderStatusPaid = () => {
-  return { type: ORDER_STATUS_PAID };
+export const getOrderTotalSuccess = (orderTotal) => {
+  return { type: GET_ORDER_TOTAL_SUCCESS, orderTotal };
 };
 
-export const resetCart = () => {
-  return { type: RESET_CART };
+export const getOrderTotalFail = (orderTotal) => {
+  return { type: GET_ORDER_TOTAL_FAIL, orderTotal };
+};
+
+export const paymentSuccess = () => {
+  return { type: PAYMENT_SUCCESS };
+};
+
+export const paymentFail = (error) => {
+  return { type: PAYMENT_FAIL, error };
 };
 
 // thunks
 
-export const submitPayment = (orderId, paymentId) => {
+export const getOrderTotal = (cart) => {
+  return async (dispatch) => {
+    try {
+      // stripe recommends calculating order total on the server
+      const { data: orderTotal } = await axios.get('/order_total', cart);
+      dispatch(GET_ORDER_TOTAL_SUCCESS, orderTotal);
+    } catch (error) {
+      console.error('Could not get order total.', error);
+      dispatch(getOrderTotalSuccess());
+    }
+  };
+};
+
+export const submitPayment = (cart, paymentId) => {
   return async (dispatch) => {
     try {
       const response = await axios.post('/api/payment/create-payment-intent', {
@@ -24,9 +47,12 @@ export const submitPayment = (orderId, paymentId) => {
       console.log('STATUS', response.status);
       // setSuccess(true); component remnant, do we need to restore somrthing there?
       // can we get the orderId from response or do we need to pass it from the component?
-      dispatch(setOrderStatusPaid(orderId));
+      dispatch(paymentSuccess());
+      // TO DO: need the order id for this. Where can we get that?
+      // dispatch(setOrderStatusPaid(orderId));
     } catch (err) {
-      console.error('Error submitting payment', err);
+      const error = new Error('Error submitting payment', err);
+      dispatch(paymentFail(error));
     }
   };
 };
@@ -42,31 +68,18 @@ export const setOrderStatusPaid = (orderId) => {
   };
 };
 
-// // needed route for orders.js
-// // when you have to change an item in the cart(like the quantity)
-// router.put("/order_status", async (req, res, next) => {
-//   try {
-//     const {orderId, status} = req.body;
-//     const item = await OrderItems.findOne({
-//       where: {
-//         orderId: orderId,
-//       }
-//     });
-//     item.update({status: status});
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
 // reducer
-// not sure there's any specific state to be returned from checkout
-// mostly it just affects other states...?
-export default function checkoutReducer(state = {}, action) {
+const defaultState = { paymentSuccess: false, orderTotal: 0, error: null };
+export default function checkoutReducer(state = defaultState, action) {
   switch (action.type) {
-    case ORDER_STATUS_PAID:
-
-    case RESET_CART:
-
+    case GET_ORDER_TOTAL_SUCCESS:
+      return { ...state, orderTotal: action.orderTotal };
+    case GET_ORDER_TOTAL_FAIL:
+      return { ...state, orderTotal: action.orderTotal, error: action.error };
+    case CHECKOUT_SUCCESS:
+      return { ...state, paymentSuccess: true };
+    case CHECKOUT_FAIL:
+      return { ...state, paymentSuccess: false, error: action.error };
     default:
       return state;
   }

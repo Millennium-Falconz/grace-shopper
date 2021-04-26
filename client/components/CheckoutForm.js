@@ -3,6 +3,7 @@ import axios from 'axios';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { connect } from 'react-redux';
 import { submitPayment } from '../store/checkout';
+import { resetCart } from '../store/cart';
 
 import '../../public/stripe_styles.css';
 
@@ -105,6 +106,9 @@ const mapDispatch = (dispatch) => {
   return {
     sendPayment: (orderId, paymentId) =>
       dispatch(submitPayment(orderId, paymentId)),
+    resetCart: () => {
+      dispatch(resetCart());
+    },
   };
 };
 
