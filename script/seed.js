@@ -35,7 +35,7 @@ const seed = async () => {
         return obj.type.name;
       });
 
-      pokemon.name = name;
+      pokemon.name = name.toUpperCase();
       pokemon.types = types;
       pokemon.price = 100;
       pokemon.description = '';
