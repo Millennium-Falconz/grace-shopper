@@ -30,13 +30,22 @@ router.get("/", async (req, res, next) => {
 //when you have to add an item to cart
 router.post("/", async (req, res, next) => {
   try {
-    const addingItemToCart = req.body;
-    const cart = await Order.findOrCreate({
-      where: {
-        status: "in cart",
-        userId: req.user.id,
-      },
-    });
+    console.log("body", req.body);
+    // console.log("req", req);
+    console.log("req.params: ", req.params);
+    console.log("req.user.id: ", req.user.id);
+    // const newOrder = await Order.create({
+    //   status: "in cart",
+    //   userId: req.user.id,
+    // });
+    // newOrder.addProduct(addingItemToCart);
+    // res.json(newOrder);
+    // const cart = await Order.findOrCreate({
+    //   where: {
+    //     status: "in cart",
+    //     userId: req.user.id,
+    //   },
+    // });
     //have to change the quantity as well
   } catch (err) {
     next(err);

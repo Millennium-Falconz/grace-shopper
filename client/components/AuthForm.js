@@ -7,7 +7,7 @@ import { authenticate } from "../store";
  */
 const AuthForm = (props) => {
   const { name, displayName, handleSubmit, error } = props;
-
+  console.log("rendering authform component");
   return (
     <div className="authForm">
       <form onSubmit={handleSubmit} name={name}>
@@ -40,6 +40,7 @@ const AuthForm = (props) => {
  *   can stay DRY with interfaces that are very similar to each other!
  */
 const mapLogin = (state) => {
+  ("in mapLogin auth form");
   return {
     name: "login",
     displayName: "Login",
@@ -56,6 +57,7 @@ const mapLogin = (state) => {
 // }
 
 const mapDispatch = (dispatch) => {
+  console.log("in mapDispatch - authform ");
   return {
     handleSubmit(evt) {
       evt.preventDefault();

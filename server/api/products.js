@@ -3,6 +3,7 @@ const Product = require("../db/models/product");
 const User = require("../db/models/user");
 
 router.get("/", async (req, res, next) => {
+  console.log("router.get allPokemon");
   try {
     const allPokemon = await Product.findAll();
     res.json(allPokemon);
@@ -12,6 +13,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:id", async (req, res, next) => {
+  console.log("router.get singlePokemon");
   try {
     const singlePokemon = await Product.findByPk(req.params.id);
     res.json(singlePokemon);
@@ -19,5 +21,22 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
+
+// router.post("/:id", async (req, res, next) => {
+//   try {
+//     const addingItemToCart = req.params.id;
+//     console.log("req.body", req.body);
+//     console.log("req.params: ", req.params);
+//     console.log("req.user.id: ", req.user.id);
+//     const newOrder = await Order.create({
+//       status: "in cart",
+//       userId: req.user.id,
+//     });
+//     newOrder.addProduct(addingItemToCart);
+//     res.json(newOrder);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 module.exports = router;

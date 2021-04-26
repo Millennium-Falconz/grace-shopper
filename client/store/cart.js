@@ -42,23 +42,24 @@ const resetCart = (cart) => {
 export const getCart = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/api/cart");
+    dispatch(retrieveCart(data));
   } catch (err) {
     console.log(err);
   }
 };
 
-export function addItem(id, cart) {
+export function addItem(pokemon, cart) {
   return async (dispatch) => {
-    console.log("in the thunk ", id, cart);
+    console.log("in the thunk ", pokemon, cart);
     try {
       //if the cart is not empty
-      if (cart.includes(id)) {
+      if (cart.includes(pokemon.id)) {
         //put route - if the cart isn't empty, edit existing order
-        const { data } = await axios.put("/api/cart", id);
+        const { data } = await axios.put("/api/cart", pokemon);
         dispatch(changeQuantity(data));
       } else {
         //post route - if the cart is empty create new order and add item
-        const { data } = await axios.post("/api/cart", id);
+        const { data } = await axios.post("/api/cart", pokemon);
         dispatch(addToCart(data));
       }
     } catch (error) {
@@ -85,7 +86,7 @@ export default function cartReducer(state = initialState, action) {
     case RETRIEVE_CART:
       return { ...state, cart: action.cart };
     case ADD_TO_CART:
-      return [...state, action.product];
+      return [...state, action.product.id];
     case REMOVE_FROM_CART:
       return state.filter((product) => {
         product.id !== action.product.id;

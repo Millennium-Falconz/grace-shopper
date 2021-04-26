@@ -1,12 +1,13 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { authenticate } from '../store';
+import React from "react";
+import { connect } from "react-redux";
+import { authenticate } from "../store";
 
 /**
  * COMPONENT
  */
 const AuthFormSignUp = (props) => {
   const { name, displayName, handleSubmit, error } = props;
+  console.log("in authform signup");
 
   return (
     <div className="authFormSignup">
@@ -41,8 +42,8 @@ const AuthFormSignUp = (props) => {
 
 const mapSignup = (state) => {
   return {
-    name: 'signup',
-    displayName: 'Sign Up',
+    name: "signup",
+    displayName: "Sign Up",
     error: state.auth.error,
   };
 };
