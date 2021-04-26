@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Order = require("../db/models/order");
 const Product = require("../db/models/product");
 const OrderItems = require("../db/models/orderItems");
+const { requireToken } = require("./gatekeeper");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -28,7 +29,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 //when you have to add an item to cart
-router.post("/", async (req, res, next) => {
+router.post("/", requireToken, async (req, res, next) => {
   try {
     console.log("body", req.body);
     // console.log("req", req);
