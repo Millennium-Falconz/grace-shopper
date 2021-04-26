@@ -1,22 +1,12 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
+module.exports = router;
 const {
   models: { User, Order },
 } = require("../db");
-module.exports = router;
+const { requireToken } = require("../api/gatekeeper");
 
-const requireToken = async (req, res, next) => {
-  console.log("in requireToken function");
-  try {
-    const token = req.headers.authorization;
-    const user = await User.findByToken(token);
-    req.user = user;
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
 router.post("/login", async (req, res, next) => {
-  console.log("express auth in login");
   try {
     res.send({ token: await User.authenticate(req.body) });
   } catch (err) {
@@ -27,8 +17,8 @@ router.post("/login", async (req, res, next) => {
 router.post("/signup", async (req, res, next) => {
   console.log("express auth in signup");
   try {
-    const { username, password } = req.body;
-    const user = await User.create({ username, password });
+    const { username, password, firstname, lastname } = req.body;
+    const user = await User.create({ username, password, firstname, lastname });
     res.send({ token: await user.generateToken() });
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
@@ -40,7 +30,6 @@ router.post("/signup", async (req, res, next) => {
 });
 
 router.get("/me", requireToken, async (req, res, next) => {
-  console.log("in /me");
   try {
     res.send(await User.findByToken(req.headers.authorization));
   } catch (ex) {

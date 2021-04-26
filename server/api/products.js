@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Product = require("../db/models/product");
 const User = require("../db/models/user");
+const {requireToken, isAdmin} = require('./gatekeeper')
 
 router.get("/", async (req, res, next) => {
   console.log("router.get allPokemon");
@@ -17,6 +18,35 @@ router.get("/:id", async (req, res, next) => {
   try {
     const singlePokemon = await Product.findByPk(req.params.id);
     res.json(singlePokemon);
+  } catch (err) {
+    next(err);
+  }
+});
+router.post("/",requireToken, isAdmin, async (req, res, next) => {
+  try {
+    res.status(201).json(await Product.create(req.body))
+  } catch (err) {
+    next(err);
+  }
+});
+router.put("/:id", requireToken , isAdmin, async (req, res, next) => {
+  try {
+    const pokemon = await Product.findByPk(req.params.id);
+    res.json(pokemon.update(req.body));
+    
+  } catch (err) {
+    next(err);
+  }
+});
+router.delete("/:id", requireToken, isAdmin, async (req, res, next) => {
+  try {
+    const pokemon = await Product.findByPk(req.params.id);
+    if (pokemon){
+      await pokemon.destroy()
+      res.sendStatus(204)
+    } else {
+      res.sendStatus(404)
+    }
   } catch (err) {
     next(err);
   }
