@@ -7,7 +7,9 @@ class Cart extends React.Component {
     super();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.cart;
+  }
   // make sure to
 
   render() {
@@ -15,11 +17,12 @@ class Cart extends React.Component {
     return (
       <div>
         <h1>hello i shall be the cart</h1>
-        <ul>
+        <p>
+          {this.props.cart[0]}
           {/* here -  this.props.map over items in state.cart. make it a div 
                 so that there can be qty and remove (both need event handlers)
                 goal is to show list of items in cart. can divs be part of ul? */}
-        </ul>
+        </p>
         {/* here - need to add react link to redirect to checkout */}
         <Link to={"/checkout"}>
           <button>Checkout</button>

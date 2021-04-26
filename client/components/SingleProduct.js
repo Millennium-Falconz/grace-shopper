@@ -18,9 +18,8 @@ class SingleProduct extends React.Component {
   handleClick(event) {
     event.preventDefault();
     // const test = event.tartget.value;
-    console.log("event.target.value: ", event.target.value);
     //HERE - before calling thunk for adding/adjusting, call getCart. if there is an order w/in cart status, put. if not post.
-    this.props.addToCart(event.target.value, this.props.cart);
+    this.props.addToCart(this.props.singlePokemon, this.props.cart);
   }
   //first - check (isLoggedIn) OR (username)
   //if true => call thunk
@@ -28,7 +27,9 @@ class SingleProduct extends React.Component {
 
   render() {
     const pokemon = this.props.singlePokemon;
+
     // const { handleClick } = this;
+    console.log("props.singlePokemon: ", this.props.singlePokemon);
     console.log("props: ", this.props);
 
     return (
@@ -38,7 +39,7 @@ class SingleProduct extends React.Component {
         <h2>Price: {pokemon.price}</h2>
         <img src={pokemon.imageURL} />
         <h3>Type: {pokemon.types}</h3>
-        <button value={pokemon} onClick={this.handleClick}>
+        <button onClick={(event) => this.handleClick(event)}>
           Add To Cart
         </button>
       </div>

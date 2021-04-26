@@ -1,4 +1,5 @@
 import axios from "axios";
+import getAuthHeaderWithToken from "./helpers";
 
 //action types
 const RETRIEVE_CART = "RETRIEVE_CART";
@@ -51,17 +52,21 @@ export const getCart = () => async (dispatch) => {
 export function addItem(pokemon, cart) {
   return async (dispatch) => {
     console.log("in the thunk ", pokemon, cart);
+    // console.log("what are you: ", Object.values(pokemon));
     try {
       //if the cart is not empty
-      if (cart.includes(pokemon.id)) {
-        //put route - if the cart isn't empty, edit existing order
-        const { data } = await axios.put("/api/cart", pokemon);
-        dispatch(changeQuantity(data));
-      } else {
-        //post route - if the cart is empty create new order and add item
-        const { data } = await axios.post("/api/cart", pokemon);
-        dispatch(addToCart(data));
-      }
+      // if (cart.includes(pokemon.id)) {
+      //   //put route - if the cart isn't empty, edit existing order
+      //   const { data } = await axios.put("/api/cart", pokemon);
+      //   dispatch(changeQuantity(data));
+      // } else
+      //post route - if the cart is empty create new order and add item
+      // console.log("pokemon", pokemon);
+      const headers = getAuthHeaderWithToken();
+      console.log(headers);
+      const { data } = await axios.post("/api/cart", pokemon, headers);
+      console.log('DATA >>>>>',data)
+      dispatch(addToCart(data));
     } catch (error) {
       console.log(error);
     }
@@ -84,7 +89,7 @@ const initialState = [];
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case RETRIEVE_CART:
-      return { ...state, cart: action.cart };
+      return [...state];
     case ADD_TO_CART:
       return [...state, action.product.id];
     case REMOVE_FROM_CART:

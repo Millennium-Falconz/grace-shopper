@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const Order = require("../db/models/order");
-const Product = require("../db/models/product");
-const OrderItems = require("../db/models/orderItems");
+const { models: { Order, Product, OrderItems} } = require("../db");
+// const Product = require("../db");
+// const OrderItems = require("../db");
 const { requireToken } = require("./gatekeeper");
 
 router.get("/", async (req, res, next) => {
@@ -31,22 +31,32 @@ router.get("/", async (req, res, next) => {
 //when you have to add an item to cart
 router.post("/", requireToken, async (req, res, next) => {
   try {
+    const addingItemToCart = req.body.id;
     console.log("body", req.body);
+    console.log("headers", req.headers);
     // console.log("req", req);
     console.log("req.params: ", req.params);
-    console.log("req.user.id: ", req.user.id);
-    // const newOrder = await Order.create({
-    //   status: "in cart",
-    //   userId: req.user.id,
-    // });
-    // newOrder.addProduct(addingItemToCart);
-    // res.json(newOrder);
+    const newOrder = await Order.create({
+      status: "in cart",
+      userId: 1,
+    });
+    
+    // const productInfo = await Product.findByPk(req.body.id)
+
+    await newOrder.addProduct(addingItemToCart, 
+      {through: {quantity: 1}});
+    const order = await Order.findByPk(newOrder.id,
+        {include: [{model: OrderItems}]}
+      )
+    const cartItems = order.orderItems
+    res.send(cartItems);
     // const cart = await Order.findOrCreate({
     //   where: {
     //     status: "in cart",
     //     userId: req.user.id,
     //   },
     // });
+    // res.json(newOrder);
     //have to change the quantity as well
   } catch (err) {
     next(err);
