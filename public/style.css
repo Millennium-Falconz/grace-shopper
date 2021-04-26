@@ -19,7 +19,7 @@ label {
 nav a {
   display: inline-block;
   border-bottom-left-radius: 15px ;
-  margin: 0.4em;
+  margin: 0.5em;
   color: white;
 }
 
@@ -32,7 +32,9 @@ h1 {
 }
 
 .navbar h1 {
-  margin: 5px;
+  margin: 0px;
+  line-height: 90px;
+  font-family: 'Zen Dots', cursive;
 }
 .pokemonContainer {
   border: 1px solid white;
