@@ -1,5 +1,6 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
+const { models: {OrderItems} } = require('../db')
 
 // const User = require("./user");
 
@@ -15,5 +16,13 @@ const Order = db.define("order", {
     defaultValue: "in cart",
   },
 });
+
+
+// Order.findOrderItems = async (orderId) => {
+//   const orderItems = await Order.findByPk(orderId,
+//     {include: [{model: OrderItems}]}
+//   )
+//   return orderItems
+// }
 
 module.exports = Order;

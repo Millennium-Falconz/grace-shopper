@@ -1,4 +1,4 @@
-const TOKEN = 'token';
+const TOKEN = "token";
 
 export default function getAuthHeaderWithToken() {
   const token = window.localStorage.getItem(TOKEN);

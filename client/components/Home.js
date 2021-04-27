@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
 /**
  * COMPONENT
  */
 export const Home = (props) => {
   const { username } = props;
-
+  console.log("in home");
   return (
     <div>
       <h3>Welcome, {username}</h3>
