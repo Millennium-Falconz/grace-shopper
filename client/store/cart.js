@@ -65,7 +65,16 @@ export function addItem(productId) {
 }
 
 //delete route
-export function removeItem() {}
+export function removeItem(productId, orderId) {
+  return async (dispatch) => {
+    try {
+      await axios.delete(`/api/cart/${productId}/${orderId}`);
+      return dispatch(getCart());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
 
 // creating thunk to change quantity -> how will it know to ++ or -- ?
 export function adjustQuantity() {}

@@ -8,20 +8,11 @@ class Cart extends React.Component {
   }
 
   componentDidMount() {
-    // if (this.props.cart.length < 1){
-    // this.props.loadCart()
-    // }
     this.props.loadCart();
   }
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.robot.id !== this.props.robot.id) {
-  //     this.setState({
-  //       name: this.props.robot.name || "", // update our state with the todo I fetched from the server
-  //       // simulates auto-populate
-  //       fuelLevel: this.props.robot.fuelLevel || "",
-  //     });
-  //   }
-  // }
+  handleDelete(productid, orderid) {
+    this.props.removeItem(productid, orderid);
+  }
 
   render() {
     const products = this.props.cart.products;
@@ -43,7 +34,13 @@ class Cart extends React.Component {
                     <p>Quantity: {product.orderItems.quantity}</p>
                     <button>+</button> <button>-</button>
                   </div>
-                  <button>X</button>
+                  <button
+                    onClick={() =>
+                      this.handleDelete(product.id, this.props.cart.id)
+                    }
+                  >
+                    X
+                  </button>
                 </div>
               );
             })}
@@ -71,6 +68,8 @@ const mapStateToProps = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     loadCart: () => dispatch(getCart()),
+    removeItem: (productid, orderid) =>
+      dispatch(removeItem(productid, orderid)),
   };
 };
 // // here - anon function calls thunk to retrieve data + update state via reducer (PUT route for users)

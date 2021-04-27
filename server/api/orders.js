@@ -2,8 +2,7 @@ const router = require("express").Router();
 const {
   models: { Order, Product, OrderItems, User },
 } = require("../db");
-// const Product = require("../db");
-// const OrderItems = require("../db");
+
 const { requireToken } = require("./gatekeeper");
 
 router.get("/", requireToken, async (req, res, next) => {
@@ -32,44 +31,6 @@ router.get("/", requireToken, async (req, res, next) => {
     next(err);
   }
 });
-//when you have to add an item to cart
-// router.post("/", requireToken, async (req, res, next) => {
-//   try {
-
-//     const addingItemToCart = req.body;
-//     const newOrder = await Order.findOrCreate({
-//       where: {
-//       status: "in cart",
-//       userId: req.user.id,
-//     }
-//   });
-//   let currItem = await OrderItems.findOne({
-//     where : {
-//       productId: addingItemToCart.id
-//     }
-//   })
-//     // const productInfo = await Product.findByPk(req.body.id)
-
-//     await newOrder.addProduct(addingItemToCart,
-//       {through: {quantity: 1, price: req.body.price}});
-
-//     const order = await Order.findByPk(newOrder.id,
-//         {include: [{model: OrderItems}]}
-//       )
-//     const cartItems = order.orderItems
-//     res.send(cartItems);
-//     // const cart = await Order.findOrCreate({
-//     //   where: {
-//     //     status: "in cart",
-//     //     userId: req.user.id,
-//     //   },
-//     // });
-//     // res.json(newOrder);
-//     //have to change the quantity as well
-//   } catch (err) {
-//     next(err);
-//   }
-// });
 
 router.post("/:productId", requireToken, async (req, res, next) => {
   //step1: assuming the cart is empty
@@ -141,9 +102,10 @@ router.put("/", async (req, res, next) => {
   }
 });
 //when you want to delete an item from your cart
-router.delete("/", async (req, res, next) => {
+router.delete("/:productId/:orderId", async (req, res, next) => {
   try {
-    const deletingItem = req.body;
+    const deletingItem = req.params;
+    console.log("BODY", req.params);
     await OrderItems.destroy({
       where: {
         productId: deletingItem.productId,
