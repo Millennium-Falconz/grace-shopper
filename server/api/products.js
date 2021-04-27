@@ -32,21 +32,19 @@ router.post("/",requireToken, isAdmin, async (req, res, next) => {
 router.put("/:id", requireToken , isAdmin, async (req, res, next) => {
   try {
     const pokemon = await Product.findByPk(req.params.id);
-    res.json(pokemon.update(req.body));
+    const poke = pokemon.update(req.body)
+    res.json(poke);
     
   } catch (err) {
     next(err);
   }
 });
+
 router.delete("/:id", requireToken, isAdmin, async (req, res, next) => {
   try {
     const pokemon = await Product.findByPk(req.params.id);
-    if (pokemon){
       await pokemon.destroy()
       res.sendStatus(204)
-    } else {
-      res.sendStatus(404)
-    }
   } catch (err) {
     next(err);
   }

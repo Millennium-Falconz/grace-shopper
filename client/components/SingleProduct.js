@@ -19,7 +19,7 @@ class SingleProduct extends React.Component {
     event.preventDefault();
     // const test = event.tartget.value;
     //HERE - before calling thunk for adding/adjusting, call getCart. if there is an order w/in cart status, put. if not post.
-    this.props.addToCart(this.props.singlePokemon, this.props.cart);
+    this.props.addToCart(this.props.match.params.id);
   }
   //first - check (isLoggedIn) OR (username)
   //if true => call thunk
@@ -29,8 +29,7 @@ class SingleProduct extends React.Component {
     const pokemon = this.props.singlePokemon;
 
     // const { handleClick } = this;
-    console.log("props.singlePokemon: ", this.props.singlePokemon);
-    console.log("props: ", this.props);
+    console.log('state', this.props)
 
     return (
       <div className="singlePoke">
@@ -59,7 +58,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     loadProduct: (id) => dispatch(fetchSingleProduct(id)),
 
-    addToCart: (pokemon, cart) => dispatch(addItem(pokemon, cart)),
+    addToCart: (productId) => dispatch(addItem( productId)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct);

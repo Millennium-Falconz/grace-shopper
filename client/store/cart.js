@@ -16,8 +16,8 @@ const retrieveCart = (cart) => {
   return { type: RETRIEVE_CART, cart };
 };
 
-const addToCart = (product) => {
-  return { type: ADD_TO_CART, product };
+const addToCart = (orderItems) => {
+  return { type: ADD_TO_CART, orderItems };
 };
 
 const removeFromCart = (product) => {
@@ -42,31 +42,22 @@ const resetCart = (cart) => {
 // NOT FINISHED - MISSING DISPATCH CALL
 export const getCart = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("/api/cart");
+    const headers = getAuthHeaderWithToken();
+    const { data } = await axios.get("/api/cart", headers);
     dispatch(retrieveCart(data));
+    console.log("data!", data);
   } catch (err) {
     console.log(err);
   }
 };
 
-export function addItem(pokemon, cart) {
+export function addItem(productId) {
   return async (dispatch) => {
-    console.log("in the thunk ", pokemon, cart);
-    // console.log("what are you: ", Object.values(pokemon));
     try {
-      //if the cart is not empty
-      // if (cart.includes(pokemon.id)) {
-      //   //put route - if the cart isn't empty, edit existing order
-      //   const { data } = await axios.put("/api/cart", pokemon);
-      //   dispatch(changeQuantity(data));
-      // } else
-      //post route - if the cart is empty create new order and add item
-      // console.log("pokemon", pokemon);
       const headers = getAuthHeaderWithToken();
-      console.log(headers);
-      const { data } = await axios.post("/api/cart", pokemon, headers);
-      console.log('DATA >>>>>',data)
+      const { data } = await axios.post(`/api/cart/${productId}`, {}, headers);
       dispatch(addToCart(data));
+      console.log("data", data);
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +65,16 @@ export function addItem(pokemon, cart) {
 }
 
 //delete route
-export function removeItem() {}
+export function removeItem(productId, orderId) {
+  return async (dispatch) => {
+    try {
+      await axios.delete(`/api/cart/${productId}/${orderId}`);
+      return dispatch(getCart());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
 
 // creating thunk to change quantity -> how will it know to ++ or -- ?
 export function adjustQuantity() {}
@@ -84,14 +84,14 @@ export function clearCart() {}
 
 // reducer
 
-const initialState = [];
+const initialState = {};
 
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case RETRIEVE_CART:
-      return [...state];
+      return action.cart;
     case ADD_TO_CART:
-      return [...state, action.product.id];
+      return { ...state, cart: action.orderItems };
     case REMOVE_FROM_CART:
       return state.filter((product) => {
         product.id !== action.product.id;

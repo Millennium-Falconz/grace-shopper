@@ -36,14 +36,14 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
  * CONTAINER
  */
 const mapState = (state) => {
-  console.log("navbar mapState isLoggedIn: ", state.auth.id);
+  // console.log("navbar mapState isLoggedIn: ", state.auth.id);
   return {
     isLoggedIn: !!state.auth.id,
   };
 };
 
 const mapDispatch = (dispatch) => {
-  console.log("navbar mapDispatch");
+  // console.log("navbar mapDispatch");
   return {
     handleClick() {
       dispatch(logout());

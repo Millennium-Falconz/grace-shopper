@@ -2,7 +2,6 @@ import axios from "axios";
 import history from "../history";
 
 const TOKEN = "token";
-
 /**
  * ACTION TYPES
  */
@@ -17,7 +16,7 @@ const setAuth = (auth) => ({ type: SET_AUTH, auth });
  * THUNK CREATORS
  */
 export const me = () => async (dispatch) => {
-  console.log("in me thunk");
+  // console.log("in me thunk");
   const token = window.localStorage.getItem(TOKEN);
   if (token) {
     const res = await axios.get("/auth/me", {
@@ -36,7 +35,7 @@ export const authenticate = (username, password, method) => async (
   try {
     const res = await axios.post(`/auth/${method}`, { username, password });
     window.localStorage.setItem(TOKEN, res.data.token);
-    dispatch(me());
+    dispatch(me());  
   } catch (authError) {
     return dispatch(setAuth({ error: authError }));
   }
