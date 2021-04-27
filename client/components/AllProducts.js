@@ -18,8 +18,8 @@ export class AllProducts extends React.Component {
       <div className="pokemonlist">
         {this.props.pokemon.map((pokemon) => {
           return (
-            <Link to={`/pokemon/${pokemon.id}`}>
-            <div key={pokemon.id} className="pokemonContainer">
+            <Link to={`/pokemon/${pokemon.id}`} key={pokemon.id}>
+            <div className="pokemonContainer">
               <img className="pokeimage" src={pokemon.imageURL} />
               
                 <h3>{pokemon.name}</h3>

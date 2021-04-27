@@ -51,9 +51,9 @@ export const getCart = () => async (dispatch) => {
   }
 };
 
-export function addItem(pokemon, cart) {
+export function addItem( productId) {
   return async (dispatch) => {
-    console.log("in the thunk ", pokemon, cart);
+    // console.log("in the thunk ", pokemon, cart);
     // console.log("what are you: ", Object.values(pokemon));
     try {
       //if the cart is not empty
@@ -65,9 +65,10 @@ export function addItem(pokemon, cart) {
       //post route - if the cart is empty create new order and add item
       // console.log("pokemon", pokemon);
       const headers = getAuthHeaderWithToken();
-      const { data } = await axios.post("/api/cart", pokemon, headers);
-      console.log('DATA >>>>>',data)
+      const { data } = await axios.post(`/api/cart/${productId}`, headers);
+      // console.log('DATA >>>>>',data)
       dispatch(addToCart(data));
+      console.log('state', state)
     } catch (error) {
       console.log(error);
     }
@@ -88,7 +89,6 @@ export function clearCart() {}
 const initialState = {};
 
 export default function cartReducer(state = initialState, action) {
-  console.log('actionnnn', action)
   switch (action.type) {
     case RETRIEVE_CART:
       return action.cart ;
