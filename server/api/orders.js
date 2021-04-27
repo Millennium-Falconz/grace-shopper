@@ -1,28 +1,28 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const {
   models: { Order, Product, OrderItems, User },
-} = require("../db");
+} = require('../db');
 
-const { requireToken } = require("./gatekeeper");
+const { requireToken } = require('./gatekeeper');
 
-router.get("/", requireToken, async (req, res, next) => {
+router.get('/', requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       include: [
         {
           model: Product,
-          through: "orderItems",
-          attributes: ["price", "id", "name", "imageURL"],
+          through: 'orderItems',
+          attributes: ['price', 'id', 'name', 'imageURL'],
         },
       ],
       where: {
-        status: "in cart",
+        status: 'in cart',
         userId: req.user.id,
       },
-      attributes: ["id", "userId"],
+      attributes: ['id', 'userId'],
     });
     if (!cart) {
-      let err = new Error("Your cart is currently empty! Start shopping!");
+      let err = new Error('Your cart is currently empty! Start shopping!');
       next(err);
     } else {
       res.json(cart);
@@ -32,7 +32,7 @@ router.get("/", requireToken, async (req, res, next) => {
   }
 });
 
-router.post("/:productId", requireToken, async (req, res, next) => {
+router.post('/:productId', requireToken, async (req, res, next) => {
   //step1: assuming the cart is empty
   //post route: creating an order
   //-> check if theres a cart -> cart = Order.findAll / one (where {status is in cart}) [ x ]
@@ -46,7 +46,7 @@ router.post("/:productId", requireToken, async (req, res, next) => {
     const pokemonIdToAdd = req.params.productId; //product from single pokemon view {current item}
     let cart = await Order.findOne({
       where: {
-        status: "in cart",
+        status: 'in cart',
         userId: req.user.id,
       },
     });
@@ -87,7 +87,7 @@ router.post("/:productId", requireToken, async (req, res, next) => {
   }
 });
 // when you have to change an item in the cart(like the quantity)
-router.put("/", async (req, res, next) => {
+router.put('/', async (req, res, next) => {
   try {
     const itemToChange = req.body;
     const item = await OrderItems.findOne({
@@ -101,11 +101,27 @@ router.put("/", async (req, res, next) => {
     next(err);
   }
 });
+
+// TEMP FOR TESTING REMOVE TO AVOID CONFLICT
+router.put('/order_status', async (req, res, next) => {
+  try {
+    const { orderId, status } = req.body;
+    const item = await OrderItems.findOne({
+      where: {
+        orderId: orderId,
+      },
+    });
+    item.update({ status: status });
+  } catch (err) {
+    next(err);
+  }
+});
+
 //when you want to delete an item from your cart
-router.delete("/:productId/:orderId", async (req, res, next) => {
+router.delete('/:productId/:orderId', async (req, res, next) => {
   try {
     const deletingItem = req.params;
-    console.log("BODY", req.params);
+    console.log('BODY', req.params);
     await OrderItems.destroy({
       where: {
         productId: deletingItem.productId,
