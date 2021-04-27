@@ -5,6 +5,7 @@ const requireToken = async(req,res,next) => {
       const token = req.headers.authorization;
       const user = await User.findByToken(token)
       req.user = user
+      console.log('Reqwuire Token', req.user.id)
       next()
     } catch (error) {
       next(error)

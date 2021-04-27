@@ -65,7 +65,8 @@ export function addItem( productId) {
       //post route - if the cart is empty create new order and add item
       // console.log("pokemon", pokemon);
       const headers = getAuthHeaderWithToken();
-      const { data } = await axios.post(`/api/cart/${productId}`, headers);
+      console.log('headers', headers)
+      const { data } = await axios.post(`/api/cart/${productId}`,{}, headers);
       // console.log('DATA >>>>>',data)
       dispatch(addToCart(data));
       console.log('state', state)

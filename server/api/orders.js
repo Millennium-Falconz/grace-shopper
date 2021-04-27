@@ -79,18 +79,17 @@ router.post('/:productId', requireToken, async (req, res, next) => {
 //-> But next time there IS an item you can search for order 'incart' [ x ]
 //-> if there IS a cart: chaeck if item is already in the cart then you would motify the qnty [ x ]
   try {
-    const pokemonIdToAdd = req.params.productId //product from single pokemon view {current item}
-
-    const cart = await Order.findOne({
+    const pokemonIdToAdd = req.params.productId//product from single pokemon view {current item}
+    let cart = await Order.findOne({
       where: {
         status: 'in cart',
-        userId: 1
+        userId: req.user.id
       }
     })
     // if there is Nothin in the cart then we create and order with the status 'in cart' 
     if (!cart){
       cart = await Order.create({
-        userId : 1
+        userId : req.user.id
       })
     } else { // checkin to see if the specific product is in cart; whats in the cart
       let currentItem = await OrderItems.findOne({
@@ -106,13 +105,13 @@ router.post('/:productId', requireToken, async (req, res, next) => {
         quantity: updateQnty
       })
       } else { //its not in the cart 
-        // const product = await Product.findByPk(pokemonIdToAdd)
-        // const pokePrice = product.price
-        let pokemonInfo = await Product.findByPk(currentItem.productId)
+        const product = await Product.findByPk(pokemonIdToAdd)
+        const pokePrice = product.price
+        let pokemonInfo = await Product.findByPk(pokemonIdToAdd)
         currentItem = await OrderItems.create({
-          quantity: 1, productId: pokemonIdToAdd, orderId : cart.id
+          quantity: 1, productId: pokemonIdToAdd, orderId : cart.id, price : pokePrice
         })
-        res.json({pokemonInfo, quantity: currentitem.quantity})
+        res.json({pokemonInfo, quantity: currentItem.quantity})
       }
     }
   } catch (error) {
