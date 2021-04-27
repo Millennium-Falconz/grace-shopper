@@ -1,10 +1,14 @@
-import React from "react";
-import { connect } from "react-redux"; // this is to connect to redux state
-import { Link } from "react-router-dom"; // this is to link to checkout
-import { removeItem, adjustQuantity, getCart } from "../store/cart";
+import React from 'react';
+import { connect } from 'react-redux'; // this is to connect to redux state
+import { Link } from 'react-router-dom'; // this is to link to checkout
+import { removeItem, adjustQuantity, getCart } from '../store/cart';
+import StripeContainer from './StripeContainer';
+
 class Cart extends React.Component {
   constructor() {
     super();
+    this.state = { showCheckout: false };
+    this.toggleCheckout = this.toggleCheckout.bind(this);
   }
 
   componentDidMount() {
@@ -12,6 +16,10 @@ class Cart extends React.Component {
   }
   handleDelete(productid, orderid) {
     this.props.removeItem(productid, orderid);
+  }
+
+  toggleCheckout() {
+    this.setState({ showCheckout: !this.state.showCheckout });
   }
 
   render() {
@@ -44,11 +52,15 @@ class Cart extends React.Component {
                 </div>
               );
             })}
+            {/* {this.state.showCheckout && <StripeContainer />} */}
+            {this.state.showCheckout && (
+              <StripeContainer cart={this.props.cart} />
+            )}
           </div>
 
-          <Link to={"/checkout"}>
-            <button>Checkout</button>
-          </Link>
+          {/* <Link to={'/checkout'}> */}
+          <button onClick={this.toggleCheckout}>Checkout</button>
+          {/* </Link> */}
         </div>
       );
     }

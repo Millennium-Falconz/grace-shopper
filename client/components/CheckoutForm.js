@@ -59,9 +59,9 @@ const CheckoutForm = (props) => {
       {!success ? (
         <form id="checkout-form" onSubmit={handleSubmit}>
           <label htmlFor="name"></label>
-          {/* <input type="text" id="name" placeholder="name" /> */}
+          <input type="text" id="name" placeholder="name" />
           <label htmlFor="email"></label>
-          {/* <input type="email" id="email" placeholder="email" /> */}
+          <input type="email" id="email" placeholder="email" />
           <CardElement
             options={{
               style: {
