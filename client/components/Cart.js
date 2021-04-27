@@ -22,7 +22,7 @@ class Cart extends React.Component {
     } else {
       return (
         <div>
-          <h1>hello i shall be the cart</h1>
+          <h1>the cart</h1>
           <div className="cartItem">
             {products.map((product) => {
               return (
