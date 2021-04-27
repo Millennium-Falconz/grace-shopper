@@ -74,9 +74,9 @@ export default function checkoutReducer(state = defaultState, action) {
       return { ...state, orderTotal: action.orderTotal };
     case GET_ORDER_TOTAL_FAIL:
       return { ...state, orderTotal: action.orderTotal, error: action.error };
-    case CHECKOUT_SUCCESS:
+    case PAYMENT_SUCCESS:
       return { ...state, paymentSuccess: true };
-    case CHECKOUT_FAIL:
+    case PAYMENT_FAIL:
       return { ...state, paymentSuccess: false, error: action.error };
     default:
       return state;
