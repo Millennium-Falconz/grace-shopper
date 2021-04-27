@@ -1,29 +1,71 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { loadAllPokemon } from '../store/allproducts';
+import { loadAllPokemon, createNewPokemon, deleteThePokemon, updateThePokemon } from '../store/allproducts';
 import { Link } from 'react-router-dom';
+
 
 export class AllProducts extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      name: '',
+      seen: false
+    }
+    this.deletePoke = this.deletePoke.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleSubmitCreate = this.handleSubmitCreate.bind(this)
   }
 
   componentDidMount() {
     this.props.loadProducts();
   }
+  // componentDidUpdate(oldProps) {
+  //   if (oldProps.pokemon.id !== this.props.pokemon.id) {
+  //     this.setState({
+  //       name: this.props.pokemon.name || ''
+  //     });
+  //   }
+  // }
+
+ 
+  handleChange(event){
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.addPokemon({ ...this.state });
+  }
+  handleSubmitCreate(event){
+    event.preventDefault();
+    this.props.editPokemon({ ...this.props.pokemon, ...this.state });
+  }
 
   render() {
     let color = ''
+    const { handleSubmit, handleChange, handleSubmitCreate } = this;
+    const { name } = this.state
+    const pokemon = this.props.pokemon
+    const amAdmin = this.props.auth.userType === 'admin'
     return (
       <div className="pokemonlist">
         {this.props.pokemon.map((pokemon) => {
           return (
-            <Link to={`/pokemon/${pokemon.id}`} key={pokemon.id}>
+            <div key={pokemon.id}>
             <div className="pokemonContainer">
+            {amAdmin? (
+              <React.Fragment>
+                <button type='button'  onClick = {() => this.props.deletePokemon(pokemon.id)}
+                > X </button>
+              </React.Fragment>
+            ) : (
+              <></>
+            )}
+            <Link to={`/pokemon/${pokemon.id}`}>
               <img className="pokeimage" src={pokemon.imageURL} />
-              
                 <h3>{pokemon.name}</h3>
-              
               <div className='here'>
                 <div>
                   {pokemon.types.map((type) => {
@@ -76,8 +118,10 @@ export class AllProducts extends React.Component {
                   })}
                 </div>
               </div>
+              </Link>
+              </div>
             </div>
-            </Link>
+          
           );
         })}
       </div>
@@ -86,11 +130,15 @@ export class AllProducts extends React.Component {
 }
 const mapStateToProps = (state) => ({
   pokemon: state.pokemon,
+  auth: state.auth
 });
 
-const mapStateToDispatch = (dispatch) => {
+const mapStateToDispatch = (dispatch, { history }) => {
   return {
     loadProducts: () => dispatch(loadAllPokemon()),
+    addPokemon: (pokemon) => dispatch(createNewPokemon(pokemon, history)),
+    editPokemon: (pokemon) => dispatch(updateThePokemon(pokemon, history)),
+    deletePokemon: (id) => dispatch(deleteThePokemon(id, history))
   };
 };
 
