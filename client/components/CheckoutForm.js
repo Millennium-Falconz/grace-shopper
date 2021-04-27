@@ -44,17 +44,10 @@ const CheckoutForm = (props) => {
         // don't have cart state yet
         console.log('No cart yet!');
       } else {
-        // create some dummy data as fallback for testing
+        // dummy id
         orderId = 24;
-        // orderItems = [
-        //   { productId: 23, price: 2000, qty: 2 },
-        //   { productId: 2, price: 1550, qty: 1 },
-        //   { productId: 4, price: 1250, qty: 1 },
-        //   { productId: 18, price: 8000, qty: 1 },
-        // ];
       }
       props.sendPayment(orderId, paymentMethod.id);
-      // dispatch(submitPayment(orderId, paymentMethod.id));
     } else {
       console.error('ERROR creating payment method', error);
     }

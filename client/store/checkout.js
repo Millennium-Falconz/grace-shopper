@@ -37,7 +37,7 @@ export const getOrderTotal = (cart) => {
   };
 };
 
-export const submitPayment = (cart, paymentId) => {
+export const submitPayment = (orderId, paymentId) => {
   return async (dispatch) => {
     try {
       const response = await axios.post('/api/payment/create-payment-intent', {
@@ -45,8 +45,6 @@ export const submitPayment = (cart, paymentId) => {
         paymentId: paymentId,
       });
       console.log('STATUS', response.status);
-      // setSuccess(true); component remnant, do we need to restore somrthing there?
-      // can we get the orderId from response or do we need to pass it from the component?
       dispatch(paymentSuccess());
       // TO DO: need the order id for this. Where can we get that?
       // dispatch(setOrderStatusPaid(orderId));
