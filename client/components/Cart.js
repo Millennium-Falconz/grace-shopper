@@ -1,10 +1,15 @@
-import React from "react";
-import { connect } from "react-redux"; // this is to connect to redux state
-import { Link } from "react-router-dom"; // this is to link to checkout
-import { removeItem, adjustQuantity, getCart } from "../store/cart";
+import React from 'react';
+import { connect } from 'react-redux'; // this is to connect to redux state
+import { Link } from 'react-router-dom'; // this is to link to checkout
+import { removeItem, adjustQuantity, getCart } from '../store/cart';
+import StripeContainer from './StripeContainer';
+
 class Cart extends React.Component {
   constructor() {
     super();
+    this.state = { showCheckout: false };
+    this.toggleCheckout = this.toggleCheckout.bind(this);
+    this.calculateOrderTotal = this.calculateOrderTotal.bind(this);
   }
 
   componentDidMount() {
@@ -12,6 +17,18 @@ class Cart extends React.Component {
   }
   handleDelete(productid, orderid) {
     this.props.removeItem(productid, orderid);
+  }
+
+  calculateOrderTotal() {
+    return this.props.cart.products.reduce((sum, product) => {
+      const qty = product.orderItems.quantity;
+      const price = product.price / 100.0;
+      return sum + price * qty;
+    }, 0);
+  }
+
+  toggleCheckout() {
+    this.setState({ showCheckout: !this.state.showCheckout });
   }
 
   render() {
@@ -44,11 +61,16 @@ class Cart extends React.Component {
                 </div>
               );
             })}
+            {/* show order total */}
+            <div>Order Total: ${this.calculateOrderTotal()}.00</div>
+            {this.state.showCheckout && (
+              <StripeContainer orderTotal={this.calculateOrderTotal() * 100} />
+            )}
           </div>
 
-          <Link to={"/checkout"}>
-            <button>Checkout</button>
-          </Link>
+          {/* <Link to={'/checkout'}> */}
+          <button onClick={this.toggleCheckout}>Checkout</button>
+          {/* </Link> */}
         </div>
       );
     }
