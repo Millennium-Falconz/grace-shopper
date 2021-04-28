@@ -1,16 +1,16 @@
-import React, { Fragment, useState } from "react";
-import axios from "axios";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { connect } from "react-redux";
-import { submitPayment } from "../store/checkout";
-import { clearCart } from "../store/cart";
-import history from "../history";
-import "../../public/stripe_styles.css";
+import React, { Fragment, useState } from 'react';
+import axios from 'axios';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { connect } from 'react-redux';
+import { submitPayment } from '../store/checkout';
+import { clearCart } from '../store/cart';
+import history from '../history';
+import '../../public/stripe_styles.css';
 // import CheckoutComplete from "./CheckoutComplete";
-import { Redirect } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
 
 const CheckoutForm = (props) => {
-  console.log("CheckoutForm props:", props);
+  console.log('CheckoutForm props:', props);
   // react hooks, since this is a functional component
   const stripe = useStripe();
   const elements = useElements();
@@ -34,34 +34,35 @@ const CheckoutForm = (props) => {
 
     // Call the stripe APIs with the info entered into our CardElement
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
+      type: 'card',
       card: cardElement,
     });
 
     if (!error) {
-      console.log("PaymentMethod:", paymentMethod);
+      console.log('PaymentMethod:', paymentMethod);
       // console.log('CheckoutForm props:', props);
       try {
         const response = await axios.post(
-          "/api/payment/create-payment-intent",
+          '/api/payment/create-payment-intent',
           {
             amount: props.orderTotal,
             id: paymentMethod.id,
           }
         );
-        console.log("STATUS", response.status);
+        console.log('STATUS', response.status);
         setSuccess(true);
 
         props.resetCart(props.cart.id);
       } catch (err) {
-        console.error("Error submitting payment", error);
+        console.error('Error submitting payment', error);
       }
     } else {
-      console.error("ERROR creating payment method", error);
+      console.error('ERROR creating payment method', error);
     }
   };
 
   // render the form
+  console.log('CHECKOUT RENDERING');
   return (
     <Fragment>
       {!success ? (
@@ -74,14 +75,14 @@ const CheckoutForm = (props) => {
             options={{
               style: {
                 base: {
-                  fontSize: "16px",
-                  color: "#424770",
-                  "::placeholder": {
-                    color: "#aab7c4",
+                  fontSize: '16px',
+                  color: '#424770',
+                  '::placeholder': {
+                    color: '#aab7c4',
                   },
                 },
                 invalid: {
-                  color: "#9e2146",
+                  color: '#9e2146',
                 },
               },
             }}
@@ -91,7 +92,7 @@ const CheckoutForm = (props) => {
           </button>
         </form>
       ) : (
-        <Redirect to="/success" />
+        <div>SUCCESS!</div>
       )}
     </Fragment>
   );
@@ -104,13 +105,12 @@ const mapState = (state) => {
 };
 
 const mapDispatch = (dispatch) => {
-  console.log("histyyyy", history);
   return {
     sendPayment: (orderId, paymentId) =>
       dispatch(submitPayment(orderId, paymentId)),
     resetCart: (orderId) => {
-      console.log("dispatchin clear cart");
-      dispatch(clearCart(orderId, history));
+      console.log('dispatchin clear cart');
+      dispatch(clearCart(orderId));
     },
   };
 };

@@ -1,15 +1,15 @@
-import axios from "axios";
-import getAuthHeaderWithToken from "./helpers";
-import history from "../history";
+import axios from 'axios';
+import getAuthHeaderWithToken from './helpers';
+import history from '../history';
 
 //action types
-const RETRIEVE_CART = "RETRIEVE_CART";
-const ADD_TO_CART = "ADD_TO_CART";
-const REMOVE_FROM_CART = "REMOVE_FROM_CART";
-const STORE_CART = "STORE_CART";
+const RETRIEVE_CART = 'RETRIEVE_CART';
+const ADD_TO_CART = 'ADD_TO_CART';
+const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
+const STORE_CART = 'STORE_CART';
 
-const RESET_CART = "RESET_CART";
-const CHANGE_QUANTITY = "CHANGE_QUANTITY";
+const RESET_CART = 'RESET_CART';
+const CHANGE_QUANTITY = 'CHANGE_QUANTITY';
 
 // action creators
 
@@ -42,11 +42,12 @@ const resetCart = () => {
 // thunk
 
 export const getCart = () => async (dispatch) => {
+  console.log('GET CART');
   try {
     const headers = getAuthHeaderWithToken();
-    const { data } = await axios.get("/api/cart", headers);
+    const { data } = await axios.get('/api/cart', headers);
     dispatch(retrieveCart(data));
-    console.log("data!", data);
+    console.log('data!', data);
   } catch (err) {
     console.log(err);
   }
@@ -58,7 +59,7 @@ export function addItem(productId) {
       const headers = getAuthHeaderWithToken();
       const { data } = await axios.post(`/api/cart/${productId}`, {}, headers);
       dispatch(addToCart(data));
-      console.log("data", data);
+      console.log('data', data);
     } catch (error) {
       console.log(error);
     }
@@ -70,7 +71,7 @@ export function removeItem(productId, orderId) {
   return async (dispatch) => {
     try {
       await axios.delete(`/api/cart/${productId}/${orderId}`);
-      return dispatch(getCart());
+      // return dispatch(getCart());
     } catch (err) {
       console.log(err);
     }
@@ -81,11 +82,12 @@ export function removeItem(productId, orderId) {
 export function adjustQuantity() {}
 
 export function clearCart(orderId) {
+  console.log('CLEAR CART');
   return async (dispatch) => {
     try {
       await axios.put(`/api/cart/${orderId}`);
-      dispatch(resetCart());
-      dispatch(getCart(cart));
+      await dispatch(resetCart());
+      dispatch(getCart());
     } catch (err) {
       console.log(err);
     }
@@ -114,7 +116,7 @@ export default function cartReducer(state = initialState, action) {
     // case STORE_CART:
     // case RETRIEVE_CART:
     case RESET_CART:
-      return {};
+      return state;
     default:
       return state;
   }
