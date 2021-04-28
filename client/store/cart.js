@@ -9,7 +9,9 @@ const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 const STORE_CART = 'STORE_CART';
 
 const RESET_CART = 'RESET_CART';
-const CHANGE_QUANTITY = 'CHANGE_QUANTITY';
+const INCREASE_QUANTITY = 'INCREASE_QUANTITY';
+const DECREASE_QUANTITY = 'DECREASE_QUANTITY';
+
 
 // action creators
 
@@ -25,8 +27,12 @@ const removeFromCart = (product) => {
   return { type: REMOVE_FROM_CART, product };
 };
 
-const changeQuantity = (qty) => {
-  return { type: CHANGE_QUANTITY, qty };
+const increaseQuantity = (orderItem) => {
+  return { type: INCREASE_QUANTITY, orderItem };
+};
+
+const decreaseQuantity = (orderItem) => {
+  return { type: DECREASE_QUANTITY, orderItem };
 };
 
 //i;m not sure we need this one
@@ -79,7 +85,28 @@ export function removeItem(productId, orderId) {
 }
 
 // creating thunk to change quantity -> how will it know to ++ or -- ?
-export function adjustQuantity() {}
+export function incrementQty(productId, orderId) { 
+  return async (dispatch) => {
+    try {
+      const {data} = await axios.put(`/api/cart/${productId}/${orderId}/plus`);
+      return dispatch(increaseQuantity(data))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+}
+
+export function decrementQty(productId, orderId) { 
+  return async (dispatch) => {
+    try {
+      const {data} = await axios.put(`/api/cart/${productId}/${orderId}/minus`);
+      console.log('decrease data: ', data)
+      return dispatch(decreaseQuantity(data))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+}
 
 export function clearCart(orderId) {
   console.log('CLEAR CART');
@@ -112,16 +139,16 @@ export default function cartReducer(state = initialState, action) {
     case RETRIEVE_CART:
       return action.cart;
     case ADD_TO_CART:
+      console.log('action.orderItems', action.orderItems)
       return { ...state, cart: action.orderItems };
     case REMOVE_FROM_CART:
       return state.filter((product) => {
         product.id !== action.product.id;
       });
-    case CHANGE_QUANTITY:
-      //QUESTIONABLE
-      return state.filter((product) => {
-        product.id === action.product.id;
-      }).quantity++;
+    case INCREASE_QUANTITY:
+      return {...state, cart: action.orderItems +1};
+    case DECREASE_QUANTITY:
+        return {...state, cart: action.orderItems -1};
     // case STORE_CART:
     // case RETRIEVE_CART:
     case RESET_CART:

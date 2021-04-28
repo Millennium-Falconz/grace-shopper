@@ -18,6 +18,7 @@ router.get('/:orderId', async (req, res, next) => {
 
 router.get('/', requireToken, async (req, res, next) => {
   try {
+    // console.log('user: ', req.user)
     const cart = await Order.findOne({
       include: [
         {
@@ -33,7 +34,8 @@ router.get('/', requireToken, async (req, res, next) => {
       attributes: ['id', 'userId'],
     });
     if (!cart) {
-      let err = new Error('Your cart is currently empty! Start shopping!');
+      console.log('requireToken: ', requireToken);
+      console.log('userId: ', req.user.id)
       next(err);
     } else {
       res.json(cart);
@@ -98,27 +100,52 @@ router.post('/:productId', requireToken, async (req, res, next) => {
   }
 });
 // when you have to change an item in the cart(like the quantity)
-router.put('/', async (req, res, next) => {
+router.put('/:productId/:orderId/plus', async (req, res, next) => {
+  console.log('ADD')
   try {
-    const itemToChange = req.body;
-    const item = await OrderItems.findOne({
+    const itemToIncrease = req.params;
+    const  item = await OrderItems.findOne({
       where: {
-        productId: itemToChange.productId,
-        orderId: itemToChange.orderId,
+        productId: itemToIncrease.productId,
+        orderId: itemToIncrease.orderId,
       },
     });
+    res.json(await item.increment('quantity'))
+    ;
     // some how have to add in quantity to change it
   } catch (err) {
     next(err);
   }
 });
 
+
+router.put('/:productId/:orderId/minus', async (req, res, next) => {
+
+  try {
+    const itemToIncrease = req.params;
+    const  item = await OrderItems.findOne({
+      where: {
+        productId: itemToIncrease.productId,
+        orderId: itemToIncrease.orderId,
+      },
+    });
+    if (item.quantity === 1) {
+      await item.destroy()
+      res.sendStatus(200)
+    } else {
+      res.json(await item.decrement('quantity'))
+    }
+    
+    // some how have to add in quantity to change it
+  } catch (err) {
+    next(err);
+  }
+});
 //when you want to delete an item from your cart
 router.delete('/:productId/:orderId', async (req, res, next) => {
   console.log('DELETE');
   try {
     const deletingItem = req.params;
-    console.log('BODY', req.params);
     await OrderItems.destroy({
       where: {
         productId: deletingItem.productId,

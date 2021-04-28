@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux"; // this is to connect to redux state
 import { Link } from "react-router-dom"; // this is to link to checkout
-import { removeItem, adjustQuantity, getCart } from "../store/cart";
+import { removeItem, incrementQty, decrementQty, getCart } from "../store/cart";
 import StripeContainer from "./StripeContainer";
 
 class Cart extends React.Component {
@@ -17,6 +17,13 @@ class Cart extends React.Component {
   }
   handleDelete(productid, orderid) {
     this.props.removeItem(productid, orderid);
+  }
+
+  handleAdd(productId, orderId) {
+    this.props.addQty(productId, orderId)
+  }
+  handleMinus(productId, orderId) {
+    this.props.minusQty(productId, orderId)
   }
 
   calculateOrderTotal() {
@@ -49,7 +56,7 @@ class Cart extends React.Component {
                   <p>Price: {product.price / 100}</p>
                   <div>
                     <p>Quantity: {product.orderItems.quantity}</p>
-                    <button>+</button> <button>-</button>
+                    <button onClick = {() => this.handleAdd(product.id, this.props.cart.id)}>+</button> <button onClick = {() => this.handleMinus(product.id, this.props.cart.id)}>-</button>
                   </div>
                   <button
                     onClick={() =>
@@ -86,10 +93,16 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = (dispatch) => {
+  console.log('dispatch: ', dispatch)
   return {
     loadCart: () => dispatch(getCart()),
     removeItem: (productid, orderid) =>
       dispatch(removeItem(productid, orderid)),
+    addQty: (productid, orderid) => {
+    dispatch(incrementQty(productid, orderid))},
+    minusQty: (productid, orderid) => {
+      dispatch(decrementQty(productid, orderid))
+    }
   };
 };
 // // here - anon function calls thunk to retrieve data + update state via reducer (PUT route for users)
