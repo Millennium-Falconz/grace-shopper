@@ -37,20 +37,39 @@ const CheckoutForm = (props) => {
 
     if (!error) {
       console.log('PaymentMethod:', paymentMethod);
-      // need to get the orderId and the items being purchased
-      // so guessing our state should be an array of OrderItems? Objects?
-      let orderId = null;
-      if (!props.cart) {
-        // don't have cart state yet
-        console.log('No cart yet!');
-      } else {
-        // dummy id
-        orderId = 24;
+      try {
+        const response = await axios.post(
+          '/api/payment/create-payment-intent',
+          {
+            orderTotal: props.orderTotal,
+            paymentMethodId: paymentMethod.id,
+          }
+        );
+        console.log('STATUS', response.status);
+        setSuccess(true);
+      } catch (err) {
+        console.error('Error submitting payment', error);
       }
-      props.sendPayment(orderId, paymentMethod.id);
     } else {
       console.error('ERROR creating payment method', error);
     }
+
+    // if (!error) {
+    //   console.log('PaymentMethod:', paymentMethod);
+    //   // need to get the orderId and the items being purchased
+    //   // so guessing our state should be an array of OrderItems? Objects?
+    //   let orderId = null;
+    //   if (!props.cart) {
+    //     // don't have cart state yet
+    //     console.log('No cart yet!');
+    //   } else {
+    //     // dummy id
+    //     orderId = 24;
+    //   }
+    //   props.sendPayment(orderId, paymentMethod.id);
+    // } else {
+    //   console.error('ERROR creating payment method', error);
+    // }
   };
 
   // render the form
@@ -59,9 +78,9 @@ const CheckoutForm = (props) => {
       {!success ? (
         <form id="checkout-form" onSubmit={handleSubmit}>
           <label htmlFor="name"></label>
-          <input type="text" id="name" placeholder="name" />
+          {/* <input type="text" id="name" placeholder="name" /> */}
           <label htmlFor="email"></label>
-          <input type="email" id="email" placeholder="email" />
+          {/* <input type="email" id="email" placeholder="email" /> */}
           <CardElement
             options={{
               style: {

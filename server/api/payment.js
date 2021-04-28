@@ -39,39 +39,39 @@ router.get('/order_total', async (req, res, next) => {
   }
 });
 
-const tempCreateFakeCartData = async () => {
-  try {
-    const { orderItems, orderId, paymentId } = req.body;
-    const result = await Order.findOrCreate({
-      where: {
-        status: 'in cart',
-        userId: 1,
-      },
-      include: [{ model: OrderItems }],
-    });
+// const tempCreateFakeCartData = async () => {
+//   try {
+//     const { orderItems, orderId, paymentId } = req.body;
+//     const result = await Order.findOrCreate({
+//       where: {
+//         status: 'in cart',
+//         userId: 1,
+//       },
+//       include: [{ model: OrderItems }],
+//     });
 
-    // remember findOrCreate returns an array!
-    const newOrder = result[0];
+//     // remember findOrCreate returns an array!
+//     const newOrder = result[0];
 
-    const randomId = Math.round(Math.random() * 100);
-    const randomQuant = Math.round(Math.random() * 10);
-    await newOrder.addProduct(randomId, { through: { quantity: randomQuant } });
-  } catch (error) {
-    console.error('Error with our fake order data:', error);
-  }
-};
+//     const randomId = Math.round(Math.random() * 100);
+//     const randomQuant = Math.round(Math.random() * 10);
+//     await newOrder.addProduct(randomId, { through: { quantity: randomQuant } });
+//   } catch (error) {
+//     console.error('Error with our fake order data:', error);
+//   }
+// };
 
 // our payment endpoint
 router.post('/create-payment-intent', async (req, res) => {
   console.log('api/create-payment-intent/post', req.body);
 
   try {
-    const newOrder = await tempCreateFakeCartData();
-    const amount = await calculateOrderAmount(newOrder.orderItems);
+    // const newOrder = await tempCreateFakeCartData();
+    // const amount = await calculateOrderAmount(newOrder.orderItems);
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 10000,
+      amount: 1000,
       currency: 'usd',
-      payment_method: paymentId,
+      payment_method: req.body.paymentId,
       confirm: true,
     });
     res.send(paymentIntent);

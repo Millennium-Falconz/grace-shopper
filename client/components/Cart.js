@@ -9,6 +9,7 @@ class Cart extends React.Component {
     super();
     this.state = { showCheckout: false };
     this.toggleCheckout = this.toggleCheckout.bind(this);
+    this.calculateOrderTotal = this.calculateOrderTotal.bind(this);
   }
 
   componentDidMount() {
@@ -16,6 +17,14 @@ class Cart extends React.Component {
   }
   handleDelete(productid, orderid) {
     this.props.removeItem(productid, orderid);
+  }
+
+  calculateOrderTotal() {
+    return this.props.cart.products.reduce((sum, product) => {
+      const qty = product.orderItems.quantity;
+      const price = product.price / 100.0;
+      return sum + price * qty;
+    }, 0);
   }
 
   toggleCheckout() {
@@ -52,9 +61,10 @@ class Cart extends React.Component {
                 </div>
               );
             })}
-            {/* {this.state.showCheckout && <StripeContainer />} */}
+            {/* show order total */}
+            <div>Order Total: ${this.calculateOrderTotal()}.00</div>
             {this.state.showCheckout && (
-              <StripeContainer cart={this.props.cart} />
+              <StripeContainer orderTotal={this.calculateOrderTotal()} />
             )}
           </div>
 
