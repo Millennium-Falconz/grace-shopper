@@ -1,14 +1,15 @@
-import axios from "axios";
-import getAuthHeaderWithToken from "./helpers";
+import axios from 'axios';
+import getAuthHeaderWithToken from './helpers';
+import history from '../history';
 
 //action types
-const RETRIEVE_CART = "RETRIEVE_CART";
-const ADD_TO_CART = "ADD_TO_CART";
-const REMOVE_FROM_CART = "REMOVE_FROM_CART";
-const STORE_CART = "STORE_CART";
+const RETRIEVE_CART = 'RETRIEVE_CART';
+const ADD_TO_CART = 'ADD_TO_CART';
+const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
+const STORE_CART = 'STORE_CART';
 
-const RESET_CART = "RESET_CART";
-const CHANGE_QUANTITY = "CHANGE_QUANTITY";
+const RESET_CART = 'RESET_CART';
+const CHANGE_QUANTITY = 'CHANGE_QUANTITY';
 
 // action creators
 
@@ -34,18 +35,19 @@ const storeCart = (cart) => {
 };
 
 // this should be called at checkout
-const resetCart = (cart) => {
-  return { type: RESET_CART, cart };
+const resetCart = () => {
+  return { type: RESET_CART };
 };
 
 // thunk
-// NOT FINISHED - MISSING DISPATCH CALL
+
 export const getCart = () => async (dispatch) => {
+  console.log('GET CART');
   try {
     const headers = getAuthHeaderWithToken();
-    const { data } = await axios.get("/api/cart", headers);
+    const { data } = await axios.get('/api/cart', headers);
     dispatch(retrieveCart(data));
-    console.log("data!", data);
+    console.log('data!', data);
   } catch (err) {
     console.log(err);
   }
@@ -57,7 +59,7 @@ export function addItem(productId) {
       const headers = getAuthHeaderWithToken();
       const { data } = await axios.post(`/api/cart/${productId}`, {}, headers);
       dispatch(addToCart(data));
-      console.log("data", data);
+      console.log('data', data);
     } catch (error) {
       console.log(error);
     }
@@ -79,8 +81,27 @@ export function removeItem(productId, orderId) {
 // creating thunk to change quantity -> how will it know to ++ or -- ?
 export function adjustQuantity() {}
 
-//delete route -> do i need this one as well as the above?
-export function clearCart() {}
+export function clearCart(orderId) {
+  console.log('CLEAR CART');
+  return async (dispatch) => {
+    try {
+      console.log('HERE??');
+      await axios.get(`/api/cart/${orderId}`);
+      console.log('DO WE EVEN GET HERE?');
+      dispatch(resetCart());
+      dispatch(getCart());
+      // // force get new cart data
+      // console.log('force fetch');
+      // const headers = getAuthHeaderWithToken();
+      // const { data } = await axios.get('/api/cart', headers);
+      // dispatch(retrieveCart(data));
+      // // console.log('data!', data);
+    } catch (err) {
+      console.log('ERROR WITH NO ERROR???');
+      console.log(err);
+    }
+  };
+}
 
 // reducer
 

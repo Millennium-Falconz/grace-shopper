@@ -1,8 +1,8 @@
-import React from 'react';
-import { connect } from 'react-redux'; // this is to connect to redux state
-import { Link } from 'react-router-dom'; // this is to link to checkout
-import { removeItem, adjustQuantity, getCart } from '../store/cart';
-import StripeContainer from './StripeContainer';
+import React from "react";
+import { connect } from "react-redux"; // this is to connect to redux state
+import { Link } from "react-router-dom"; // this is to link to checkout
+import { removeItem, adjustQuantity, getCart } from "../store/cart";
+import StripeContainer from "./StripeContainer";
 
 class Cart extends React.Component {
   constructor() {
@@ -33,13 +33,13 @@ class Cart extends React.Component {
 
   render() {
     const products = this.props.cart.products;
-    //console.log("these prods", products[0].name);
+    console.log("STATE", this.props);
     if (!products) {
       return <div>There are no items here to show</div>;
     } else {
       return (
         <div>
-          <h1>the cart</h1>
+          <h1>Your Cart</h1>
           <div className="cartItem">
             {products.map((product) => {
               return (

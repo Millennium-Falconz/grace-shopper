@@ -1,10 +1,10 @@
-import axios from "axios";
-import getAuthHeaderWithToken from "./helpers";
+import axios from 'axios';
+import getAuthHeaderWithToken from './helpers';
 // action types
-const FETCH_POKEMON = "FETCH_POKEMON";
-const ADD_POKEMON = "ADD_POKEMON";
-const EDIT_POKEMON = "EDIT_POKEMON";
-const DELETE_POKEMON = "DELETE_POKEMON";
+const FETCH_POKEMON = 'FETCH_POKEMON';
+const ADD_POKEMON = 'ADD_POKEMON';
+const EDIT_POKEMON = 'EDIT_POKEMON';
+const DELETE_POKEMON = 'DELETE_POKEMON';
 // action creators
 
 const fetchPokemon = (pokemon) => ({
@@ -27,16 +27,16 @@ const updatePokemon = (pokemon) => ({
 });
 //create thunk
 export const createNewPokemon = (pokemon, history) => {
-  console.log("pokemon", pokemon);
+  console.log('pokemon', pokemon);
   return async (dispatch) => {
     const headers = getAuthHeaderWithToken();
     const { data: created } = await axios.post(
-      "/api/pokemon",
+      '/api/pokemon',
       pokemon,
       headers
     );
     dispatch(createPokemon(created));
-    history.push("/pokemon");
+    history.push('/pokemon');
   };
 };
 
@@ -46,8 +46,8 @@ export const deleteThePokemon = (id, history) => {
     const headers = getAuthHeaderWithToken();
     const { data: pokemon } = await axios.delete(`/api/pokemon/${id}`, headers);
     dispatch(deletePokemon(pokemon));
-    history.push("/");
-    history.push("/pokemon");
+    history.push('/');
+    history.push('/pokemon');
   };
 };
 //update thunk
@@ -62,7 +62,7 @@ export const updateThePokemon = (pokemon, history) => {
 export const loadAllPokemon = () => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get("/api/pokemon");
+      const { data } = await axios.get('/api/pokemon');
       dispatch(fetchPokemon(data));
     } catch (err) {
       console.log(err);

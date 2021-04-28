@@ -6,20 +6,19 @@ const {
   models: { User, Product },
 } = require('../server/db');
 
-/**
- * seed - this function clears the database, updates tables to
- *      match the models, and populates the database.
- */
+
 
 const seed = async () => {
   await db.sync({ force: true });
   console.log('db synced');
   console.log('getting data...');
   try {
-    // Get a list of Pokemon and make a list of their names
     const { data } = await axios.get(
       'https://pokeapi.co//api/v2/pokemon/?limit=100'
     );
+    const users = await Promise.all([
+      User.create({ username: 'ash', password: '123', userType: 'admin' }),
+    ])
     const allPokemon = data.results;
     const names = allPokemon.map((obj) => obj.name);
     const pokemon = {};
@@ -28,8 +27,7 @@ const seed = async () => {
     // to add to the database
     names.forEach(async (name) => {
       const url = `https://pokeapi.co/api/v2/pokemon/${name}/`;
-      const { data } = await axios.get(url);
-      console.log('--------');
+      const { data } = await axios.get(url)
 
       const types = data.types.map((obj) => {
         return obj.type.name;
@@ -43,6 +41,7 @@ const seed = async () => {
       pokemon.quantity = Product.quantity;
 
       addToDatabase(pokemon);
+
     });
   } catch (err) {
     console.error('Error somewhere fetching all this data...', err);
@@ -50,7 +49,6 @@ const seed = async () => {
 };
 
 const addToDatabase = async (pokemon) => {
-  console.log('adding...');
   try {
     await Product.create(pokemon);
   } catch (err) {
@@ -64,17 +62,16 @@ const addToDatabase = async (pokemon) => {
  The `seed` function is concerned only with modifying the database.
 */
 async function runSeed() {
-  console.log('runSeed...');
+
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log('closing db connection');
-    // Commenting this for now cuz it's preventing the data from seeding. Will fix later...
-    // await db.close();
-    console.log('db connection closed');
+
+  
+
   }
 }
 
