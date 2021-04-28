@@ -1,5 +1,6 @@
 import axios from "axios";
 import getAuthHeaderWithToken from "./helpers";
+import history from "../history";
 
 //action types
 const RETRIEVE_CART = "RETRIEVE_CART";
@@ -34,12 +35,12 @@ const storeCart = (cart) => {
 };
 
 // this should be called at checkout
-const resetCart = (cart) => {
-  return { type: RESET_CART, cart };
+const resetCart = () => {
+  return { type: RESET_CART };
 };
 
 // thunk
-// NOT FINISHED - MISSING DISPATCH CALL
+
 export const getCart = () => async (dispatch) => {
   try {
     const headers = getAuthHeaderWithToken();
@@ -79,8 +80,17 @@ export function removeItem(productId, orderId) {
 // creating thunk to change quantity -> how will it know to ++ or -- ?
 export function adjustQuantity() {}
 
-//delete route -> do i need this one as well as the above?
-export function clearCart() {}
+export function clearCart(orderId) {
+  return async (dispatch) => {
+    try {
+      await axios.put(`/api/cart/${orderId}`);
+      dispatch(resetCart());
+      dispatch(getCart(cart));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+}
 
 // reducer
 
@@ -104,7 +114,7 @@ export default function cartReducer(state = initialState, action) {
     // case STORE_CART:
     // case RETRIEVE_CART:
     case RESET_CART:
-      return initialState;
+      return {};
     default:
       return state;
   }
