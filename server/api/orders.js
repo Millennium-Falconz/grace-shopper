@@ -5,6 +5,17 @@ const {
 
 const { requireToken } = require('./gatekeeper');
 
+router.get('/:orderId', async (req, res, next) => {
+  try {
+    const item = await Order.findByPk(req.params.orderId);
+    item.update({ status: 'paid' });
+    // need to send back something??
+    res.json(item);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/', requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
@@ -102,23 +113,9 @@ router.put('/', async (req, res, next) => {
   }
 });
 
-// TEMP FOR TESTING REMOVE TO AVOID CONFLICT
-router.put('/order_status', async (req, res, next) => {
-  try {
-    const { orderId, status } = req.body;
-    const item = await OrderItems.findOne({
-      where: {
-        orderId: orderId,
-      },
-    });
-    item.update({ status: status });
-  } catch (err) {
-    next(err);
-  }
-});
-
 //when you want to delete an item from your cart
 router.delete('/:productId/:orderId', async (req, res, next) => {
+  console.log('DELETE');
   try {
     const deletingItem = req.params;
     console.log('BODY', req.params);

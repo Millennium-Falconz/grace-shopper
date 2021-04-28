@@ -3,9 +3,11 @@ import axios from 'axios';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { connect } from 'react-redux';
 import { submitPayment } from '../store/checkout';
-import { resetCart } from '../store/cart';
-
+import { clearCart } from '../store/cart';
+import history from '../history';
 import '../../public/stripe_styles.css';
+// import CheckoutComplete from "./CheckoutComplete";
+import { Redirect } from 'react-router-dom';
 
 const CheckoutForm = (props) => {
   console.log('CheckoutForm props:', props);
@@ -49,6 +51,8 @@ const CheckoutForm = (props) => {
         );
         console.log('STATUS', response.status);
         setSuccess(true);
+
+        props.resetCart(props.cart.id);
       } catch (err) {
         console.error('Error submitting payment', error);
       }
@@ -58,6 +62,7 @@ const CheckoutForm = (props) => {
   };
 
   // render the form
+  console.log('CHECKOUT RENDERING');
   return (
     <Fragment>
       {!success ? (
@@ -87,7 +92,7 @@ const CheckoutForm = (props) => {
           </button>
         </form>
       ) : (
-        <h1>Success! You have captured your Pokemon!</h1>
+        <Redirect to="/success" />
       )}
     </Fragment>
   );
@@ -103,8 +108,9 @@ const mapDispatch = (dispatch) => {
   return {
     sendPayment: (orderId, paymentId) =>
       dispatch(submitPayment(orderId, paymentId)),
-    resetCart: () => {
-      dispatch(resetCart());
+    resetCart: (orderId) => {
+      console.log('dispatchin clear cart');
+      dispatch(clearCart(orderId));
     },
   };
 };
