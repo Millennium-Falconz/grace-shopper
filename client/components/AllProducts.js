@@ -49,10 +49,28 @@ export class AllProducts extends React.Component {
       this.props.auth.userType === "admin" 
     return (
       <>
-        <div className="">
-          {amAdmin ? (
-            <React.Fragment>
-              <form id="pokemon-form" onSubmit={handleSubmit}>
+       
+        <div className="pokemonlist">
+        {amAdmin ? (
+                <>
+                <>
+                        <button
+                          type="button"
+                          className="create"
+                          onClick={function myFunction() {
+                            var x = document.getElementById("myForm");
+                            if (x.style.display === "none") {
+                              x.style.display = "block";
+                            } else {
+                              x.style.display = "none";
+                            }
+                          }}
+                        >
+                          Create New Pokemon
+                        </button>
+                      </>
+                  <div className="form-popup" id="myForm">
+                    <form id="pokemon-form" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="pokemonname">Create New Pokemon </label>
                   <input
@@ -61,30 +79,18 @@ export class AllProducts extends React.Component {
                     value={name}
                     placeholder="New Pokemon Name"
                   />
-                  <button type="submit"> Submit</button>
+                  <button type="submit" onClick={() => {
+                              var x = document.getElementById("myForm");
+                              if (x.style.display === "none") {
+                              x.style.display = "block";
+                            } else {
+                              x.style.display = "none";
+                            }
+                            }}> Submit</button>
                 </div>
               </form>
-            </React.Fragment>
-          ) : (
-            <></>
-          )}
-        </div>
-        <div className="pokemonlist">
-        {amAdmin ? (
-                  <div className="form-popup" id="myForm">
-                    <form style={{ display: "" }} onSubmit={handleSubmitEdit}>
-                      <div>
-                        <label >Edit Pokemon </label>
-                        <input
-                          name="name"
-                          onChange={handleChange}
-                          value={name}
-                          placeholder="Change Name"
-                        />
-                        <button type="submit" > Submit</button>
-                      </div>
-                    </form>
                   </div>
+                  </>
                 ) : (
                   <></>
                 )}
@@ -102,22 +108,6 @@ export class AllProducts extends React.Component {
                         
                         x
                       </button>
-                      <>
-                        <button
-                          type="button"
-                          className="allpokedel"
-                          onClick={function myFunction() {
-                            var x = document.getElementById("myForm");
-                            if (x.style.display === "none") {
-                              x.style.display = "block";
-                            } else {
-                              x.style.display = "none";
-                            }
-                          }}
-                        >
-                          edit
-                        </button>
-                      </>
                     </React.Fragment>
                   ) : (
                     <></>

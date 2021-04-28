@@ -2,82 +2,96 @@ const router = require('express').Router();
 if (process.env.NODE_ENV !== 'production') require('../secrets.js');
 const stripeKey = process.env.STRIPE_API_KEY;
 const stripe = require('stripe')(stripeKey);
-const {
-  models: { Product, User, Order, OrderItems },
-} = require('../db');
 
-router.get('/order_total', async (req, res, next) => {
-  /*
-  Note: stripe recommends calculating the order amount here
-  on the server to prevent people from manipulating the
-  amount on the client
-  
-  Note 2: Amounts are in cents, due to the javascript float
-  approximating issue
-  */
-
-  // to calculate this, need access to the OrderItems(?) in the cart
-  // if cart is an array of order items
-  // shoot we need to look up the prices right now since they're not in the orderItems table
-  const { cart } = req.body;
-  let amounts = [];
-  try {
-    amounts = await Promise.all(
-      cart.map(async (orderItem) => {
-        const product = await Product.findByPk(orderItem.productId);
-        return product.price * orderItem.quantity;
-      })
-    );
-
-    const total = amounts.reduce((sum, amt) => {
-      return sum + amt;
-    }, 0);
-    res.json(total);
-  } catch (err) {
-    const error = new Error('Could not calculate order amount.', err);
-    next(error);
-  }
+// justs to test the routes and that we're getting the env vars
+router.get('/public_keys', (req, res) => {
+  res.send(process.env.STRIPE_PUBLIC_KEY);
 });
 
-const tempCreateFakeCartData = async () => {
-  try {
-    const { orderItems, orderId, paymentId } = req.body;
-    const result = await Order.findOrCreate({
-      where: {
-        status: 'in cart',
-        userId: 1,
-      },
-      include: [{ model: OrderItems }],
-    });
+const calculateOrderAmount = (items) => {
+  /*
+  Note: calculating the order amount here on the server to
+  prevent people from manipulating the amount on the
+  client
 
-    // remember findOrCreate returns an array!
-    const newOrder = result[0];
+  Note 2: Amounts are in cents, due to the
+  javascript float approximating issue
+  */
 
-    const randomId = Math.round(Math.random() * 100);
-    const randomQuant = Math.round(Math.random() * 10);
-    await newOrder.addProduct(randomId, { through: { quantity: randomQuant } });
-  } catch (error) {
-    console.error('Error with our fake order data:', error);
-  }
+  // dummy value for now.
+  return 1400;
 };
 
 // our payment endpoint
 router.post('/create-payment-intent', async (req, res) => {
-  console.log('api/create-payment-intent/post', req.body);
-
+  // const { items } = req.body;
   try {
-    const newOrder = await tempCreateFakeCartData();
-    const amount = await calculateOrderAmount(newOrder.orderItems);
+    const { amount, id } = req.body;
+    console.log('api/payment', req.body);
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 10000,
+      amount: amount,
       currency: 'usd',
-      payment_method: paymentId,
+      payment_method: id,
       confirm: true,
     });
+    // console.log('paymentIntent', paymentIntent);
+    // res.send({ clientSecret: paymentIntent.clilent_secret });
     res.send(paymentIntent);
-  } catch (error) {
-    console.error('Error with stripe payment intent', error);
+  } catch (err) {
+    console.error('Error in payment route.', err);
   }
 });
 
+// not sure we need this. Or even how to trigger it...
+router.post('/webhook', (req, res) => {
+  const event = req.body;
+  console.log('STRIPE WEBHOOK', event);
+});
 module.exports = router;
+
+// const router = require('express').Router();
+// if (process.env.NODE_ENV !== 'production') require('../secrets.js');
+// const stripeKey = process.env.STRIPE_API_KEY;
+// const stripe = require('stripe')(stripeKey);
+
+// // justs to test the routes and that we're getting the env vars
+// router.get('/public_keys', (req, res) => {
+//   res.send(process.env.STRIPE_PUBLIC_KEY);
+// });
+
+// const calculateOrderAmount = (items) => {
+//   /*
+//   Note: calculating the order amount here on the server to
+//   prevent people from manipulating the amount on the
+//   client
+
+//   Note 2: Amounts are in cents, due to the
+//   javascript float approximating issue
+//   */
+
+//   // dummy value for now.
+//   return 1400;
+// };
+
+// // our payment endpoint
+// router.post('/create-payment-intent', async (req, res) => {
+//   // const { items } = req.body;
+//   const { amount, id } = req.body;
+//   console.log('api/payment', req.body, amount, id);
+//   const paymentIntent = await stripe.paymentIntents.create({
+//     amount: amount,
+//     currency: 'usd',
+//     payment_method: id,
+//     confirm: true,
+//   });
+//   // console.log('paymentIntent', paymentIntent);
+//   // res.send({ clientSecret: paymentIntent.clilent_secret });
+//   res.send(paymentIntent);
+// });
+
+// // not sure we need this. Or even how to trigger it...
+// router.post('/webhook', (req, res) => {
+//   const event = req.body;
+//   console.log('STRIPE WEBHOOK', event);
+// });
+// module.exports = router;

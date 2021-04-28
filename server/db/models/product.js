@@ -15,10 +15,6 @@ const Product = db.define("product", {
   },
   price: {
     type: Sequelize.INTEGER,
-    // isNull: false,
-    // validate: {
-    //   notEmpty: true,
-    // },
   },
   types: {
     type: Sequelize.ARRAY(Sequelize.STRING),
@@ -35,14 +31,9 @@ const Product = db.define("product", {
   pokedexID: {
     type: Sequelize.INTEGER,
 
-    // isNull: false,
-    // validate: {
-    //   notEmpty: true,S
-    // },
   },
   quantity: {
     type: Sequelize.INTEGER,
-    // i'm setting default value to one because adding/removing should affect only one product at a time - UNSURE IF THIS IS THE WAY TO GO
     defaultValue: 100,
   },
 });

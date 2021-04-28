@@ -54,7 +54,7 @@ const User = db.define("user", {
   },
 });
 
-// before checkout, add address, billing, etc
+
 
 module.exports = User;
 
@@ -66,9 +66,7 @@ User.prototype.generateToken = function () {
   return jwt.sign({ id: this.id }, process.env.JWT);
 };
 
-/**
- * classMethods
- */
+
 User.authenticate = async function ({ username, password }) {
   console.log("in user.authenticate");
   const user = await this.findOne({ where: { username } });
@@ -99,11 +97,8 @@ User.findByToken = async function (token) {
   }
 };
 
-/**
- * hooks
- */
+
 const hashPassword = async (user) => {
-  //in case the password has been changed, we want to encrypt it with bcrypt
   if (user.changed("password")) {
     user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }
