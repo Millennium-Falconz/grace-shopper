@@ -20,6 +20,10 @@ const seed = async () => {
     const { data } = await axios.get(
       'https://pokeapi.co//api/v2/pokemon/?limit=100'
     );
+    const users = await Promise.all([
+      User.create({ username: 'ash', password: '123', userType: 'admin' }), 
+    ])
+
     const allPokemon = data.results;
     const names = allPokemon.map((obj) => obj.name);
     const pokemon = {};
