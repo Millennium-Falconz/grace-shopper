@@ -71,7 +71,7 @@ export function removeItem(productId, orderId) {
   return async (dispatch) => {
     try {
       await axios.delete(`/api/cart/${productId}/${orderId}`);
-      // return dispatch(getCart());
+      return dispatch(getCart());
     } catch (err) {
       console.log(err);
     }
@@ -85,10 +85,19 @@ export function clearCart(orderId) {
   console.log('CLEAR CART');
   return async (dispatch) => {
     try {
-      await axios.put(`/api/cart/${orderId}`);
-      await dispatch(resetCart());
+      console.log('HERE??');
+      await axios.get(`/api/cart/${orderId}`);
+      console.log('DO WE EVEN GET HERE?');
+      dispatch(resetCart());
       dispatch(getCart());
+      // // force get new cart data
+      // console.log('force fetch');
+      // const headers = getAuthHeaderWithToken();
+      // const { data } = await axios.get('/api/cart', headers);
+      // dispatch(retrieveCart(data));
+      // // console.log('data!', data);
     } catch (err) {
+      console.log('ERROR WITH NO ERROR???');
       console.log(err);
     }
   };
@@ -116,7 +125,7 @@ export default function cartReducer(state = initialState, action) {
     // case STORE_CART:
     // case RETRIEVE_CART:
     case RESET_CART:
-      return state;
+      return initialState;
     default:
       return state;
   }

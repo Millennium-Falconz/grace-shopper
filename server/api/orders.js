@@ -5,10 +5,12 @@ const {
 
 const { requireToken } = require('./gatekeeper');
 
-router.put('/:orderId', async (req, res, next) => {
+router.get('/:orderId', async (req, res, next) => {
   try {
     const item = await Order.findByPk(req.params.orderId);
     item.update({ status: 'paid' });
+    // need to send back something??
+    res.json(item);
   } catch (err) {
     next(err);
   }

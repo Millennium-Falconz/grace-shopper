@@ -92,7 +92,7 @@ const CheckoutForm = (props) => {
           </button>
         </form>
       ) : (
-        <div>SUCCESS!</div>
+        <Redirect to="/success" />
       )}
     </Fragment>
   );
