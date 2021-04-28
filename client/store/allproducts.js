@@ -49,9 +49,8 @@ export const deleteThePokemon = (id, history) => {
 export const updateThePokemon = (pokemon, history) => {
       return async (dispatch) => {
         const headers = getAuthHeaderWithToken();
-        const {data: updated} = await axios.put(`/api/pokemon/${pokemon.id}`, headers)
+        const {data: updated} = await axios.put(`/api/pokemon`, headers)
         dispatch(updatePokemon(updated));
-        history.push('/pokemon')
       }
     }
 //thunk

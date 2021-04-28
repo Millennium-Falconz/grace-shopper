@@ -4,7 +4,6 @@ const User = require("../db/models/user");
 const {requireToken, isAdmin} = require('./gatekeeper')
 
 router.get("/", async (req, res, next) => {
-  console.log("router.get allPokemon");
   try {
     const allPokemon = await Product.findAll();
     res.json(allPokemon);
@@ -14,7 +13,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:id", async (req, res, next) => {
-  console.log("router.get singlePokemon");
+
   try {
     const singlePokemon = await Product.findByPk(req.params.id);
     res.json(singlePokemon);

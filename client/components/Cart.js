@@ -8,41 +8,50 @@ class Cart extends React.Component {
   }
 
   componentDidMount() {
-    // if (this.props.cart.length < 1){
-    // this.props.loadCart()
-    // }
-    this.props.loadCart()
+    this.props.loadCart();
   }
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.robot.id !== this.props.robot.id) {
-  //     this.setState({
-  //       name: this.props.robot.name || "", // update our state with the todo I fetched from the server
-  //       // simulates auto-populate
-  //       fuelLevel: this.props.robot.fuelLevel || "",
-  //     });
-  //   }
-  // }
-  
+  handleDelete(productid, orderid) {
+    this.props.removeItem(productid, orderid);
+  }
+
   render() {
-    console.log("rendering ", this.props);
-    return (
-      <div>
-        <h1>hello i shall be the cart</h1>
+    const products = this.props.cart.products;
+    //console.log("these prods", products[0].name);
+    if (!products) {
+      return <div>There are no items here to show</div>;
+    } else {
+      return (
         <div>
-          {/* {this.props.cart.products.map((item,index) => {
-            console.log('itemsssssss', item)
-            return <p key = {index}>{item.id} HELLO WE MAPPING</p>
-          })} */}
-          {/* here -  this.props.map over items in state.cart. make it a div 
-                so that there can be qty and remove (both need event handlers)
-                goal is to show list of items in cart. can divs be part of ul? */}
+          <h1>the cart</h1>
+          <div className="cartItem">
+            {products.map((product) => {
+              return (
+                <div key={product.id}>
+                  <p>{product.name}</p>
+                  <img src={product.imageURL} />
+                  <p>Price: {product.price / 100}</p>
+                  <div>
+                    <p>Quantity: {product.orderItems.quantity}</p>
+                    <button>+</button> <button>-</button>
+                  </div>
+                  <button
+                    onClick={() =>
+                      this.handleDelete(product.id, this.props.cart.id)
+                    }
+                  >
+                    X
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <Link to={"/checkout"}>
+            <button>Checkout</button>
+          </Link>
         </div>
-        {/* here - need to add react link to redirect to checkout */}
-        <Link to={"/checkout"}>
-          <button>Checkout</button>
-        </Link>
-      </div>
-    );
+      );
+    }
   }
 }
 
@@ -57,10 +66,12 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatch = (dispatch) => {
-return {
-  loadCart: () => dispatch(getCart())
-}
-}
+  return {
+    loadCart: () => dispatch(getCart()),
+    removeItem: (productid, orderid) =>
+      dispatch(removeItem(productid, orderid)),
+  };
+};
 // // here - anon function calls thunk to retrieve data + update state via reducer (PUT route for users)
 // const mapDispatchToProps = () => {}
 // two anon functions attached to two buttons .... ugh do these buttons also have to distinguish btwn logged in and not logged in?

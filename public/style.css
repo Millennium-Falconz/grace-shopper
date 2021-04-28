@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
   font-family: sans-serif;
   height: 100%;
 }
@@ -18,7 +19,7 @@ label {
 
 nav a {
   display: inline-block;
-  border-bottom-left-radius: 15px ;
+  border-bottom-left-radius: 15px;
   margin: 0.5em;
   color: white;
 }
@@ -34,7 +35,7 @@ h1 {
 .navbar h1 {
   margin: 0px;
   line-height: 90px;
-  font-family: 'Zen Dots', cursive;
+  font-family: "Zen Dots", cursive;
 }
 .pokemonContainer {
   border: 1px solid white;
@@ -64,15 +65,15 @@ h1 {
 .pokeimage {
   block-size: 130px;
 }
- .here p {
-   text-align: center;
-   padding:3px;
- }
- .here div{
-   border: 1px solid white;
-   border-radius: 3px;
-   margin: 7px;
- }
+.here p {
+  text-align: center;
+  padding: 3px;
+}
+.here div {
+  border: 1px solid white;
+  border-radius: 3px;
+  margin: 7px;
+}
 .pokemonlist {
   display: flex;
   flex-direction: row;
@@ -104,11 +105,6 @@ h1 {
   padding: 0px 80px;
 }
 
-#type{
-color:white;
-font-size: 17px;
-}
-
 button.allpokedel{
   opacity: 0.1px;
   background-image: linear-gradient(rgb(26, 1, 85), rgb(73, 43, 179));
@@ -120,7 +116,7 @@ button.allpokedel{
 }
 .form-popup {
   color: white;
-  background-image:radial-gradient(rgb(36, 17, 80), rgb(73, 43, 179));
+  background-image: radial-gradient(rgba(84, 2, 249, 0.673), rgb(13, 1, 26));
   display:none;
   position: fixed;
   bottom: 0;
@@ -128,3 +124,11 @@ button.allpokedel{
   border: 3px solid #f1f1f1;
   z-index: 9;
 }
+#type {
+  color: white;
+  font-size: 17px;
+}
+.cartItem {
+  color: whitesmoke;
+}
+

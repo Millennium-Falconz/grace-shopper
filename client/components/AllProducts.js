@@ -17,28 +17,13 @@ export class AllProducts extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSubmitEdit = this.handleSubmitEdit.bind(this)
+    this.handleSubmitEdit = this.handleSubmitEdit.bind(this);
   }
 
   componentDidMount() {
     this.props.loadProducts();
   }
 
-  // componentDidUpdate(oldProps) {
-  //   if (oldProps.pokemon.id !== this.props.pokemon.id) {
-  //     this.setState({
-  //       name: this.props.pokemon.name || "",
-  //     });
-  //   }
-  // }
-
-  openForm() {
-    document.getElementById("myForm").style.display = "block";
-  }
-
-  closeForm() {
-    document.getElementById("myForm").style.display = "none";
-  }
 
   handleChange(event) {
     this.setState({
@@ -48,7 +33,6 @@ export class AllProducts extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.addPokemon({ ...this.state });
-    console.log(this.state);
   }
 
   handleSubmitEdit(event) {
@@ -60,7 +44,9 @@ export class AllProducts extends React.Component {
     const { handleSubmit, handleChange, handleSubmitEdit } = this;
     const { name } = this.state;
     const pokemon = this.props.pokemon;
-    const amAdmin = this.props.auth.userType === "admin";
+
+    const amAdmin =
+      this.props.auth.userType === "admin" 
     return (
       <>
         <div className="">
@@ -84,31 +70,27 @@ export class AllProducts extends React.Component {
           )}
         </div>
         <div className="pokemonlist">
+        {amAdmin ? (
+                  <div className="form-popup" id="myForm">
+                    <form style={{ display: "" }} onSubmit={handleSubmitEdit}>
+                      <div>
+                        <label >Edit Pokemon </label>
+                        <input
+                          name="name"
+                          onChange={handleChange}
+                          value={name}
+                          placeholder="Change Name"
+                        />
+                        <button type="submit" > Submit</button>
+                      </div>
+                    </form>
+                  </div>
+                ) : (
+                  <></>
+                )}
           {this.props.pokemon.map((pokemon) => {
             return (
               <div key={pokemon.id}>
-                {amAdmin ? (
-                <div className="form-popup" id="myForm">
-                <form
-                  style={{ display: "" }}
-                  onSubmit = {handleSubmitEdit}
-                > 
-                  <div>
-                    <label htmlFor="pokemonname">Edit Pokemon </label>
-                    <input
-                      name="name"
-                      onChange={handleChange}
-                      value={name}
-                      placeholder="Change Name"
-                    />
-                    <button type="submit" > Submit</button>
-                  </div>
-                </form>
-
-              </div>
-              ) : (
-                <></>
-              )}
                 <div className="pokemonContainer">
                   {amAdmin ? (
                     <React.Fragment>
@@ -117,8 +99,8 @@ export class AllProducts extends React.Component {
                         className="allpokedel"
                         onClick={() => this.props.deletePokemon(pokemon.id)}
                       >
-                        {" "}
-                        x{" "}
+                        
+                        x
                       </button>
                       <>
                         <button

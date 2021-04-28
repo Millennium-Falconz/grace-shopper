@@ -82,11 +82,10 @@ User.authenticate = async function ({ username, password }) {
 
 User.findByToken = async function (token) {
   try {
-    // const {id} = await jwt.verify(token, process.env.JWT)
+  
     const payload = await jwt.verify(token, process.env.JWT);
     const user = await User.findByPk(payload.id);
     if (payload) {
-      //find the user by payload which will have the userId
       return user;
     }
     if (!user) {
@@ -94,7 +93,6 @@ User.findByToken = async function (token) {
     }
     return user;
   } catch (ex) {
-    console.log('findByToken', token)
     const error = Error("Unathorized, bad token!");
     error.status = 401;
     throw error;
