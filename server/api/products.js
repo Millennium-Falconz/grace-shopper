@@ -22,14 +22,14 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
-router.post("/create",requireToken, isAdmin, async (req, res, next) => {
+router.post("/",requireToken, isAdmin, async (req, res, next) => {
   try {
     res.status(201).json(await Product.create(req.body))
   } catch (err) {
     next(err);
   }
 });
-router.put("/edit/:id", requireToken , isAdmin, async (req, res, next) => {
+router.put("/:id", requireToken , isAdmin, async (req, res, next) => {
   try {
     const pokemon = await Product.findByPk(req.params.id);
     const poke = pokemon.update(req.body)
