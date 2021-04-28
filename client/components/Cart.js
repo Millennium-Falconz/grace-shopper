@@ -42,29 +42,37 @@ class Cart extends React.Component {
     const products = this.props.cart.products;
     console.log("STATE", this.props);
     if (!products) {
-      return <div>There are no items here to show</div>;
+      return <div className = 'emptyCart'>
+        <h2>There are no items here to show</h2>
+        <Link to={'/pokemon'}>
+        <div className = 'linkAll'><h3>Start catching them all</h3></div>
+        </Link>
+        </div>;
     } else {
       return (
         <div>
           <h1>Your Cart</h1>
-          <div className="cartItem">
+          <span className="cartItem">
             {products.map((product) => {
               return (
                 <div key={product.id}>
-                  <p>{product.name}</p>
-                  <img src={product.imageURL} />
-                  <p>Price: {product.price / 100}</p>
+                    <h2>{product.name}</h2>
+                  <img id = 'cartImage' src={product.imageURL} />
+                  
+                  <p>Price: ${product.price / 100}.00</p>
                   <div>
                     <p>Quantity: {product.orderItems.quantity}</p>
                     <button onClick = {() => this.handleAdd(product.id, this.props.cart.id)}>+</button> <button onClick = {() => this.handleMinus(product.id, this.props.cart.id)}>-</button>
                   </div>
-                  <button
+                  <span className="cartItem">
+                  <button id = 'cartDelete'
                     onClick={() =>
                       this.handleDelete(product.id, this.props.cart.id)
                     }
                   >
                     X
                   </button>
+                  </span>
                 </div>
               );
             })}
@@ -73,7 +81,7 @@ class Cart extends React.Component {
             {this.state.showCheckout && (
               <StripeContainer orderTotal={this.calculateOrderTotal() * 100} />
             )}
-          </div>
+          </span>
 
           <button onClick={this.toggleCheckout}>Checkout</button>
         </div>

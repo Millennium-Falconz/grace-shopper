@@ -30,14 +30,16 @@ class SingleProduct extends React.Component {
 
     // const { handleClick } = this;
     console.log('state', this.props)
-
+    console.log('types: ', pokemon.types)
     return (
       <div className="singlePoke">
         <h1>Name: {pokemon.name}</h1>
-        <h3>Description: {pokemon.description}</h3>
-        <h2>Price: {pokemon.price}</h2>
-        <img src={pokemon.imageURL} />
-        <h3>Type: {pokemon.types}</h3>
+        {/* <h3>Description: {pokemon.description}</h3> */}
+        <h2>Price: ${pokemon.price/100}.00</h2>
+        <img id = 'singlePokeImage' src={pokemon.imageURL} />
+        <h3>Type: 
+          {pokemon.types}
+          </h3>
         <button onClick={(event) => this.handleClick(event)}>
           Add To Cart
         </button>

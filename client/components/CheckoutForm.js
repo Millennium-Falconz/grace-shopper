@@ -67,6 +67,8 @@ const CheckoutForm = (props) => {
     <Fragment>
       {!success ? (
         <form id="checkout-form" onSubmit={handleSubmit}>
+                <h2>Let's checkout! </h2>
+
           <label htmlFor="name"></label>
           <input type="text" id="name" placeholder="name" />
           <label htmlFor="email"></label>
