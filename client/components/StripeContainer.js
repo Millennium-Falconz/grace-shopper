@@ -10,7 +10,7 @@ const stripePromise = loadStripe(PUBLIC_KEY);
 export default function StripeContainer(props) {
   console.log('StripeContainer props', props);
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} orderTotal={props.orderTotal}>
       <CheckoutForm orderTotal={props.orderTotal} />
     </Elements>
   );

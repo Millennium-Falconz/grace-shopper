@@ -68,9 +68,7 @@ class Cart extends React.Component {
             )}
           </div>
 
-          {/* <Link to={'/checkout'}> */}
           <button onClick={this.toggleCheckout}>Checkout</button>
-          {/* </Link> */}
         </div>
       );
     }
