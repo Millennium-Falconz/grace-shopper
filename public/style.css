@@ -130,10 +130,47 @@ button.allpokedel{
 }
 .cartItem {
   color: whitesmoke;
+  text-align: justify;
+  display: inline-block
+  
 }
+
+span {
+  
+}
+
 .create{
 display: inline-block;
 background-image: radial-gradient(rgb(61, 43, 177), rgb(0, 0, 6));
 width: 100%;
 border: 0.2px double white
+}
+
+.singlePoke {
+  color: white;
+  text-align: center;
+
+  
+}
+
+#singlePokeImage {
+  block-size: 400px;
+  
+}
+
+.emptyCart {
+  color: white;
+  text-align: center;
+}
+
+.linkAll {
+  color: white;
+}
+
+#cartImage {
+  block-size: 100px;
+}
+
+#cartDelete {
+  align-self: right;
 }

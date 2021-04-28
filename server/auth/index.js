@@ -18,7 +18,7 @@ router.post("/signup", async (req, res, next) => {
   console.log("express auth in signup");
   try {
     const { username, password, firstname, lastname } = req.body;
-    const user = await User.create({ username, password, firstname, lastname });
+    const user = await User.create({ username, password, firstname, lastname, userType: 'user' });
     res.send({ token: await user.generateToken() });
   } catch (err) {
     if (err.name === "SequelizeUniqueConstraintError") {
