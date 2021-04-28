@@ -29,7 +29,7 @@ router.post('/create-payment-intent', async (req, res) => {
     const { amount, id } = req.body;
     console.log('api/payment', req.body);
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 10000,
+      amount: amount,
       currency: 'usd',
       payment_method: id,
       confirm: true,

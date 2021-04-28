@@ -64,7 +64,7 @@ class Cart extends React.Component {
             {/* show order total */}
             <div>Order Total: ${this.calculateOrderTotal()}.00</div>
             {this.state.showCheckout && (
-              <StripeContainer orderTotal={this.calculateOrderTotal()} />
+              <StripeContainer orderTotal={this.calculateOrderTotal() * 100} />
             )}
           </div>
 
