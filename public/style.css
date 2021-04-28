@@ -45,7 +45,7 @@ h1 {
   color: aliceblue;
   background-image: radial-gradient(rgba(84, 2, 249, 0.673), rgb(13, 1, 26));
   text-align: center;
-  height: 250px;
+  height: 300px;
 }
 .pokemonContainer a {
   color: aliceblue;
@@ -105,10 +105,35 @@ h1 {
   padding: 0px 80px;
 }
 
+button.allpokedel{
+  opacity: 0.1px;
+  background-image: linear-gradient(rgb(26, 1, 85), rgb(73, 43, 179));
+  color: white;
+  width: 60%;
+  height: 10%;
+  text-align:center;
+  margin: 0px;
+}
+.form-popup {
+  color: white;
+  background-image: radial-gradient(rgba(84, 2, 249, 0.673), rgb(0, 0, 0));
+  display:none;
+  position: fixed;
+  top: 0;
+  justify-content: center;
+  border: 1px solid #f1f1f1;
+  z-index: 9;
+}
 #type {
   color: white;
   font-size: 17px;
 }
 .cartItem {
   color: whitesmoke;
+}
+.create{
+display: inline-block;
+background-image: radial-gradient(rgb(61, 43, 177), rgb(0, 0, 6));
+width: 100%;
+border: 0.2px double white
 }
