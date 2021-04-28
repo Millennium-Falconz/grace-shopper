@@ -54,7 +54,7 @@ const User = db.define("user", {
   },
 });
 
-// before checkout, add address, billing, etc
+
 
 module.exports = User;
 
@@ -66,9 +66,7 @@ User.prototype.generateToken = function () {
   return jwt.sign({ id: this.id }, process.env.JWT);
 };
 
-/**
- * classMethods
- */
+
 User.authenticate = async function ({ username, password }) {
   console.log("in user.authenticate");
   const user = await this.findOne({ where: { username } });
@@ -82,11 +80,10 @@ User.authenticate = async function ({ username, password }) {
 
 User.findByToken = async function (token) {
   try {
-    // const {id} = await jwt.verify(token, process.env.JWT)
+  
     const payload = await jwt.verify(token, process.env.JWT);
     const user = await User.findByPk(payload.id);
     if (payload) {
-      //find the user by payload which will have the userId
       return user;
     }
     if (!user) {
@@ -94,18 +91,14 @@ User.findByToken = async function (token) {
     }
     return user;
   } catch (ex) {
-    console.log('findByToken', token)
     const error = Error("Unathorized, bad token!");
     error.status = 401;
     throw error;
   }
 };
 
-/**
- * hooks
- */
+
 const hashPassword = async (user) => {
-  //in case the password has been changed, we want to encrypt it with bcrypt
   if (user.changed("password")) {
     user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }

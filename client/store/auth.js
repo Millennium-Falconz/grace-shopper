@@ -2,6 +2,7 @@ import axios from "axios";
 import history from "../history";
 
 const TOKEN = "token";
+
 /**
  * ACTION TYPES
  */
@@ -16,7 +17,6 @@ const setAuth = (auth) => ({ type: SET_AUTH, auth });
  * THUNK CREATORS
  */
 export const me = () => async (dispatch) => {
-  // console.log("in me thunk");
   const token = window.localStorage.getItem(TOKEN);
   if (token) {
     const res = await axios.get("/auth/me", {
@@ -31,7 +31,6 @@ export const me = () => async (dispatch) => {
 export const authenticate = (username, password, method) => async (
   dispatch
 ) => {
-  console.log("in authenticate thunk");
   try {
     const res = await axios.post(`/auth/${method}`, { username, password });
     window.localStorage.setItem(TOKEN, res.data.token);
@@ -42,7 +41,6 @@ export const authenticate = (username, password, method) => async (
 };
 
 export const logout = () => {
-  console.log("in logout thunk");
   window.localStorage.removeItem(TOKEN);
   history.push("/login");
   return {
