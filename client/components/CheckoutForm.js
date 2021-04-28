@@ -8,6 +8,7 @@ import { resetCart } from '../store/cart';
 import '../../public/stripe_styles.css';
 
 const CheckoutForm = (props) => {
+  console.log('CheckoutForm props:', props);
   // react hooks, since this is a functional component
   const stripe = useStripe();
   const elements = useElements();
@@ -37,12 +38,13 @@ const CheckoutForm = (props) => {
 
     if (!error) {
       console.log('PaymentMethod:', paymentMethod);
+      // console.log('CheckoutForm props:', props);
       try {
         const response = await axios.post(
           '/api/payment/create-payment-intent',
           {
-            orderTotal: props.orderTotal,
-            paymentMethodId: paymentMethod.id,
+            amount: props.orderTotal,
+            id: paymentMethod.id,
           }
         );
         console.log('STATUS', response.status);
